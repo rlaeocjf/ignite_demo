@@ -1,10 +1,12 @@
-import React, { FC } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { View, ViewStyle, Button, TextStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import { Header, Screen, Text } from "../../components"
 import { color, spacing } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
+import DatePicker from "react-native-date-picker"
+import AsyncStorage from "@react-native-community/async-storage"
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -27,10 +29,16 @@ const HEADER_TITLE: TextStyle = {
 
 export const AlarmAddScreen: FC<StackScreenProps<NavigatorParamList, "alarm">> = observer(
   ({ navigation }) => {
+    const [date, setDate] = useState(new Date())
     const goBack = () => navigation.goBack()
     const save = () => {
-      console.log("save!")
+      if (date) {
+        AsyncStorage.setItem("alarm", JSON.stringify({ time: date }), () => {
+          console.log("saved alarm")
+        })
+      }
     }
+
     return (
       <View testID="AlarmAddScreen" style={FULL}>
         {/* <GradientBackground colors={["#422443", "#281b34"]} /> */}
@@ -44,7 +52,9 @@ export const AlarmAddScreen: FC<StackScreenProps<NavigatorParamList, "alarm">> =
             rightIcon="bullet"
             onRightPress={save}
           />
-          <View></View>
+          <View>
+            <DatePicker date={date} mode="time" onDateChange={setDate} />
+          </View>
         </Screen>
       </View>
     )
