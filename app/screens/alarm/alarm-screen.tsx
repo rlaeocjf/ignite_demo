@@ -8,6 +8,7 @@ import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 import { Audio } from "expo-av"
 import { Recording } from "expo-av/build/Audio"
+import { SingleEntryPlugin } from "webpack"
 
 const FULL: ViewStyle = {
   flex: 1,
