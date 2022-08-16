@@ -59,6 +59,7 @@ const AppStack = () => {
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
 export const AppNavigator = (props: NavigationProps) => {
+  console.log(DarkTheme)
   const colorScheme = useColorScheme()
   useBackButtonHandler(canExit)
   return (
