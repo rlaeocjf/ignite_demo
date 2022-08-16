@@ -2,6 +2,7 @@ import React from "react"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { RecordScreen } from "../screens/record/recod-screen"
 import { Ionicons } from "@expo/vector-icons"
+import { AlarmScreen } from "../screens/alarm/alarm-screen"
 
 const Tab = createBottomTabNavigator()
 
@@ -17,7 +18,7 @@ function Tabs() {
       />
       <Tab.Screen
         name="알람"
-        component={RecordScreen}
+        component={AlarmScreen}
         options={{
           tabBarIcon: ({ color, size }) => <Ionicons name={"alarm"} color={color} size={size} />,
         }}
