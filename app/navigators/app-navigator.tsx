@@ -12,6 +12,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 import { RecordScreen } from "../screens/record/recod-screen"
 import Tabs from "./tab-navigator"
+import { DemoListScreen } from "../screens"
+import { AlarmAddScreen } from "../screens/alarm/alarm-add-screen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -31,6 +33,8 @@ export type NavigatorParamList = {
   demoList: undefined
   record: undefined
   tabs: undefined
+  alarm: undefined
+  alarmAdd: undefined
   // 🔥 Your screens go here
 }
 
@@ -50,8 +54,9 @@ const AppStack = () => {
       <Stack.Screen name="demo" component={DemoScreen} />
       <Stack.Screen name="demoList" component={DemoListScreen} /> */}
       {/** 🔥 Your screens go here */}
-      <Stack.Screen name="record" component={RecordScreen} />
+      {/* <Stack.Screen name="record" component={RecordScreen} /> */}
       <Stack.Screen name="tabs" component={Tabs} />
+      <Stack.Screen name="alarmAdd" component={AlarmAddScreen} />
     </Stack.Navigator>
   )
 }

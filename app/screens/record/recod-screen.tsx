@@ -130,7 +130,7 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "demoList">> 
 
     return (
       <View testID="RecordScreen" style={FULL}>
-        <GradientBackground colors={["#422443", "#281b34"]} />
+        {/* <GradientBackground colors={["#422443", "#281b34"]} /> */}
         <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
           <View>
             <Text>{message}</Text>
