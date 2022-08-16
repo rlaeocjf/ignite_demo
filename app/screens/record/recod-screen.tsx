@@ -70,6 +70,8 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "demoList">> 
           await Audio.setAudioModeAsync({
             allowsRecordingIOS: true,
             playsInSilentModeIOS: true,
+            //백그라운드 모드에서 녹음 할때..
+            staysActiveInBackground: true,
           })
           console.log("Starting recording..")
           const { recording } = await Audio.Recording.createAsync(
