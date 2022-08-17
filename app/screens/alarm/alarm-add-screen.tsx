@@ -1,12 +1,12 @@
 import React, { FC, useEffect, useState } from "react"
-import { View, ViewStyle, Button, TextStyle } from "react-native"
+import { View, ViewStyle, TextStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import { Header, Screen, Text } from "../../components"
+import { Header, Screen, Text, Button } from "../../components"
 import { color, spacing } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
 import DatePicker from "react-native-date-picker"
-import AsyncStorage from "@react-native-community/async-storage"
+import { remove, save } from "../../utils/storage"
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -26,16 +26,29 @@ const HEADER_TITLE: TextStyle = {
   lineHeight: 15,
   textAlign: "center",
 }
-
+const DEMO: ViewStyle = {
+  paddingVertical: spacing[4],
+  paddingHorizontal: spacing[4],
+  backgroundColor: color.palette.deepPurple,
+}
+const BOLD: TextStyle = { fontWeight: "bold" }
+const DEMO_TEXT: TextStyle = {
+  ...BOLD,
+  fontSize: 13,
+  letterSpacing: 2,
+}
 export const AlarmAddScreen: FC<StackScreenProps<NavigatorParamList, "alarm">> = observer(
   ({ navigation }) => {
     const [date, setDate] = useState(new Date())
     const goBack = () => navigation.goBack()
-    const save = () => {
+    const saveAlarm = () => {
       if (date) {
-        AsyncStorage.setItem("alarm", JSON.stringify({ time: date }), () => {
-          console.log("saved alarm")
-        })
+        save("alarm", { time: date })
+      }
+    }
+    const removeAlarm = () => {
+      if (date) {
+        remove("alarm")
       }
     }
 
@@ -49,11 +62,11 @@ export const AlarmAddScreen: FC<StackScreenProps<NavigatorParamList, "alarm">> =
             onLeftPress={goBack}
             style={HEADER}
             titleStyle={HEADER_TITLE}
-            rightIcon="bullet"
-            onRightPress={save}
           />
           <View>
             <DatePicker date={date} mode="time" onDateChange={setDate} />
+            <Button style={DEMO} textStyle={DEMO_TEXT} text={"저장"} onPress={saveAlarm} />
+            <Button style={DEMO} textStyle={DEMO_TEXT} text={"삭제"} onPress={removeAlarm} />
           </View>
         </Screen>
       </View>
