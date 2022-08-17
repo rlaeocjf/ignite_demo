@@ -1,5 +1,5 @@
 import React, { useEffect, FC, useState } from "react"
-import { TextStyle, View, ViewStyle, ImageStyle, Button } from "react-native"
+import { TextStyle, View, ViewStyle, ImageStyle, Button, Alert } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import { Screen, Text } from "../../components"
@@ -8,6 +8,7 @@ import { NavigatorParamList } from "../../navigators"
 import { Audio } from "expo-av"
 import { Recording } from "expo-av/build/Audio"
 import { getAllItemFromAsync, setItemToAsync } from "../../storage"
+import { remove } from "../../utils/storage"
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -45,9 +46,13 @@ const FLAT_LIST: ViewStyle = {
 }
 export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "demoList">> = observer(
   ({ navigation }) => {
+    console.log("comp!")
     const [recording, setRecording] = useState<Recording>()
     const [savedRecordings, setSavedRecordings] = useState<{ key: string; val: string }[]>([])
     const [message, setMessage] = useState<string>("")
+    const [isDeletedRecording, setIsdeletedRecording] = useState<boolean>(false)
+    const [isSavedRecording, setIsSavedRecording] = useState<boolean>(false)
+    console.log(isDeletedRecording)
 
     const startRecording = async () => {
       try {
@@ -58,7 +63,7 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "demoList">> 
           await Audio.setAudioModeAsync({
             allowsRecordingIOS: true,
             playsInSilentModeIOS: true,
-            //백그라운드 모드에서 녹음 할때..
+            // 백그라운드 모드에서 녹음 할때..
             staysActiveInBackground: true,
           })
           console.log("Starting recording..")
@@ -83,16 +88,19 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "demoList">> 
       console.log("Recording stopped and stored at", uri)
 
       const { sound, status } = await recording.createNewLoadedSoundAsync()
-
+      console.log(status)
       if (status.isLoaded) {
-        setItemToAsync(`recording_${new Date().getTime()}`, recording.getURI)
+        console.log(recording.getURI())
+        setItemToAsync(`recording_${new Date().getTime()}`, recording.getURI()).then(() => {
+          setIsSavedRecording(true)
+        })
         // updateRecordings.push({
         //   sound: sound,
         //   duration: getDurationFormatted(status.durationMillis),
         //   file: recording.getURI,
         // })
       }
-      //setRecordings(updateRecordings)
+      // setRecordings(updateRecordings)
     }
 
     const getDurationFormatted = (millis: number) => {
@@ -120,6 +128,17 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "demoList">> 
     }
 
     useEffect(() => {
+      if (isSavedRecording) {
+        loadSavedRecordings()
+        setIsSavedRecording(false)
+      }
+      if (isDeletedRecording) {
+        loadSavedRecordings()
+        setIsdeletedRecording(false)
+      }
+    }, [isSavedRecording, isDeletedRecording])
+
+    useEffect(() => {
       loadSavedRecordings()
     }, [])
 
@@ -134,6 +153,12 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "demoList">> 
               }}
               title="Play"
             />
+            <Button
+              onPress={() => {
+                remove(savedRecording.key).then(() => setIsdeletedRecording(true))
+              }}
+              title="delete"
+            />
           </View>
         )
       })
@@ -145,8 +170,11 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "demoList">> 
         <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
           <View>
             <Text>{message}</Text>
-            <Button title="start recording" color="#841584" onPress={startRecording} />
-            <Button title="stop recording" color="#841584" onPress={stopRecording} />
+            <Button
+              title={recording ? "stop recording" : "start recording"}
+              color="#841584"
+              onPress={recording ? stopRecording : startRecording}
+            />
             {getRecordingFromLocalStorage()}
           </View>
         </Screen>

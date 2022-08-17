@@ -14,7 +14,7 @@ function Tabs() {
         name="home"
         component={WelcomeScreen}
         options={{
-          tabBarIcon: ({ color, size }) => <Ionicons name={"mic"} color={color} size={size} />,
+          tabBarIcon: ({ color, size }) => <Ionicons name={"ios-home"} color={color} size={size} />,
         }}
       />
       <Tab.Screen
