@@ -41,21 +41,21 @@ export const setItemToAsync = (storageName: string, item: any) => {
     });
 };
 
-// AsyncStorage get 함수 모듈
+// AsyncStorage get 함수 모듈r
 export const getAllItemFromAsync = async (module: string) => {
+    const data: { key: string, val: string }[] = [];
     if (isEmpty(module)) {
         throw Error('module is empty');
     }
     try {
         const keys = await AsyncStorage.getAllKeys();
-        console.log(keys)
-        const moduleKeys = keys.filter(key => key.indexOf(module) > -1)
-        const contents = await AsyncStorage.multiGet(moduleKeys);
-        // do something what you need with response
-        // console.log('11111111111111111111111111111111');
-        // console.log(contents);
-        // console.log('22222222222222222222222222222222222');
+        const moduleKeys = keys.filter(key => key.indexOf(module) > -1);
+        const items = await AsyncStorage.multiGet(moduleKeys);
+        items.forEach((item) => {
+            data.push({ key: item[0], val: item[1] })
+        })
     } catch (error) {
         console.log(error)
     }
+    return data;
 }
