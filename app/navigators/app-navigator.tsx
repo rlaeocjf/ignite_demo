@@ -12,7 +12,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 import { RecordScreen } from "../screens/record/recod-screen"
 import Tabs from "./tab-navigator"
-import { DemoListScreen } from "../screens"
+import { DemoListScreen, DemoScreen, WelcomeScreen } from "../screens"
 import { AlarmAddScreen } from "../screens/alarm/alarm-add-screen"
 
 /**
@@ -50,9 +50,9 @@ const AppStack = () => {
       // initialRouteName="welcome"
       initialRouteName="tabs"
     >
-      {/* <Stack.Screen name="welcome" component={WelcomeScreen} />
+      {/* <Stack.Screen name="welcome" component={WelcomeScreen} /> */}
       <Stack.Screen name="demo" component={DemoScreen} />
-      <Stack.Screen name="demoList" component={DemoListScreen} /> */}
+      <Stack.Screen name="demoList" component={DemoListScreen} />
       {/** 🔥 Your screens go here */}
       {/* <Stack.Screen name="record" component={RecordScreen} /> */}
       <Stack.Screen name="tabs" component={Tabs} />
