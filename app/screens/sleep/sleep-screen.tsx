@@ -9,6 +9,9 @@ import { NavigatorParamList } from "../../navigators"
 import { Audio } from "expo-av"
 import { Recording } from "expo-av/build/Audio"
 import { SingleEntryPlugin } from "webpack"
+import { load } from "../../utils/storage"
+import moment from "moment"
+import BackgroundTimer from "react-native-background-timer"
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -45,14 +48,58 @@ const FLAT_LIST: ViewStyle = {
   paddingHorizontal: spacing[4],
 }
 
-export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "alarm">> = observer(
+export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = observer(
   ({ navigation }) => {
     const goBack = () => navigation.goBack()
+    const [alarmTime, setAlarmTime] = useState<string>()
+    const [timer, setTimer] = useState<number>()
+
+    useEffect(() => {
+      load("alarm").then((data) => {
+        if (data && data.time) {
+          const currTime = moment(new Date())
+          const savedTime = moment(data.time)
+          const diff = moment.duration(savedTime.diff(currTime)).asMilliseconds()
+          const timeout = BackgroundTimer.setTimeout(() => {
+            playSound()
+          }, diff)
+          setTimer(timeout)
+        }
+      })
+    }, [])
+
+    const clearTime = () => {
+      BackgroundTimer.clearTimeout(timer)
+    }
+
+    const playSound = async () => {
+      console.log("Loading Sound")
+      await Audio.setAudioModeAsync({
+        playsInSilentModeIOS: true,
+        staysActiveInBackground: true,
+      })
+      const { sound } = await Audio.Sound.createAsync(
+        require("../../../assets/ringtones/walk_in_the_forest.mp3"),
+      )
+      // setSound(sound)
+      // console.log("Playing Sound")
+      // sound.setIsLoopingAsync(true)
+      // await sound.playAsync()
+      sound.setIsLoopingAsync(true)
+      await sound.playAsync()
+    }
 
     return (
-      <View testID="RecordScreen" style={FULL}>
+      <View testID="SleepScreen" style={FULL}>
         {/* <GradientBackground colors={["#422443", "#281b34"]} /> */}
         <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
+          <Header
+            headerText="알람변경"
+            leftIcon="back"
+            onLeftPress={goBack}
+            style={HEADER}
+            titleStyle={HEADER_TITLE}
+          />
           <View>
             <Text>편안히 주무세욘</Text>
           </View>

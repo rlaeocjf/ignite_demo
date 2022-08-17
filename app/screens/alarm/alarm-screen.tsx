@@ -66,10 +66,11 @@ export const AlarmScreen: FC<StackScreenProps<NavigatorParamList, "alarm">> = ob
           <View>
             <Text>알람화면</Text>
             <Button
-              title="알람추가"
+              title="알람변경"
               color="#841584"
               onPress={() => navigation.navigate("alarmAdd")}
             />
+            <Button title="잠자기" color="#841584" onPress={() => navigation.navigate("sleep")} />
           </View>
         </Screen>
       </View>

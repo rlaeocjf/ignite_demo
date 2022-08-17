@@ -68,7 +68,7 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "demoList">> 
           })
           console.log("Starting recording..")
           const { recording } = await Audio.Recording.createAsync(
-            Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY,
+            Audio.RECORDING_OPTIONS_PRESET_LOW_QUALITY,
           )
           setRecording(recording)
           console.log("Recording started")

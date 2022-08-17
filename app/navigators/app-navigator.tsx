@@ -14,6 +14,7 @@ import { RecordScreen } from "../screens/record/recod-screen"
 import Tabs from "./tab-navigator"
 import { DemoListScreen, DemoScreen, WelcomeScreen } from "../screens"
 import { AlarmAddScreen } from "../screens/alarm/alarm-add-screen"
+import { SleepScreen } from "../screens/sleep/sleep-screen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -35,6 +36,7 @@ export type NavigatorParamList = {
   tabs: undefined
   alarm: undefined
   alarmAdd: undefined
+  sleep: undefined
   // 🔥 Your screens go here
 }
 
@@ -57,6 +59,7 @@ const AppStack = () => {
       {/* <Stack.Screen name="record" component={RecordScreen} /> */}
       <Stack.Screen name="tabs" component={Tabs} />
       <Stack.Screen name="alarmAdd" component={AlarmAddScreen} />
+      <Stack.Screen name="sleep" component={SleepScreen} />
     </Stack.Navigator>
   )
 }
