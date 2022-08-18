@@ -9,26 +9,36 @@ const Tab = createBottomTabNavigator()
 
 function Tabs() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: { backgroundColor: "#3a3e46" },
+        tabBarActiveTintColor: "#2bbae8",
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: "600",
+        },
+      }}
+    >
       <Tab.Screen
         name="home"
         component={WelcomeScreen}
         options={{
-          tabBarIcon: ({ color, size }) => <Ionicons name={"ios-home"} color={color} size={size} />,
+          tabBarIcon: ({ color }) => <Ionicons name={"ios-home"} color={color} size={30} />,
         }}
       />
       <Tab.Screen
         name="녹음"
         component={RecordScreen}
         options={{
-          tabBarIcon: ({ color, size }) => <Ionicons name={"mic"} color={color} size={size} />,
+          headerShown: false,
+          tabBarIcon: ({ color }) => <Ionicons name={"mic"} color={color} size={30} />,
         }}
       />
       <Tab.Screen
         name="알람"
         component={AlarmScreen}
         options={{
-          tabBarIcon: ({ color, size }) => <Ionicons name={"alarm"} color={color} size={size} />,
+          tabBarIcon: ({ color }) => <Ionicons name={"alarm"} color={color} size={30} />,
         }}
       />
     </Tab.Navigator>
