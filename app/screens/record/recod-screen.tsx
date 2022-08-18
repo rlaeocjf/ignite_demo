@@ -1,5 +1,5 @@
 import React, { useEffect, FC, useState } from "react"
-import { TextStyle, View, ViewStyle, ImageStyle, Alert } from "react-native"
+import { TextStyle, View, ViewStyle, ImageStyle, Alert, TouchableOpacity } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import { GradientBackground, Screen, Text, Button } from "../../components"
@@ -8,8 +8,10 @@ import { NavigatorParamList } from "../../navigators"
 import { Audio } from "expo-av"
 import { Recording } from "expo-av/build/Audio"
 import { getAllItemFromAsync, setItemToAsync } from "../../storage"
-import { remove } from "../../utils/storage"
+import { load, remove } from "../../utils/storage"
 import { MaterialCommunityIcons, Ionicons, Feather } from "@expo/vector-icons"
+import moment from "moment"
+import { useIsFocused } from "@react-navigation/native"
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -69,8 +71,14 @@ const BUTTON_TEXT = {
 const HEADER_TEXT = {
   fontSize: 18,
   color: "#fff",
-  marginRight: 10,
-  marginBottom: 3,
+  marginRight: 4,
+  marginTop: 4,
+}
+
+const TOUCH_ADD_ALARM: ViewStyle = {
+  flex: 1,
+  justifyContent: "flex-end",
+  flexDirection: "row",
 }
 
 const HEADER_IMG: ViewStyle = {
@@ -84,6 +92,9 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
     const [message, setMessage] = useState<string>("")
     const [isDeletedRecording, setIsdeletedRecording] = useState<boolean>(false)
     const [isSavedRecording, setIsSavedRecording] = useState<boolean>(false)
+    const [alarmTime, setAlarmTime] = useState<string>()
+
+    const isFocused = useIsFocused()
 
     const startRecording = async () => {
       try {
@@ -119,7 +130,6 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
       console.log("Recording stopped and stored at", uri)
 
       const { sound, status } = await recording.createNewLoadedSoundAsync()
-      console.log(status)
       if (status.isLoaded) {
         console.log(recording.getURI())
         setItemToAsync(`recording_${new Date().getTime()}`, recording.getURI()).then(() => {
@@ -170,6 +180,17 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
     }, [isSavedRecording, isDeletedRecording])
 
     useEffect(() => {
+      load("alarm").then((data) => {
+        if (data && data.time) {
+          const t = moment(data.time).locale("ko").format("LT")
+          setAlarmTime(t)
+        } else {
+          setAlarmTime("")
+        }
+      })
+    }, [isFocused])
+
+    useEffect(() => {
       loadSavedRecordings()
     }, [])
 
@@ -200,8 +221,13 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
         <GradientBackground colors={["#0f3352", "#3a444f"]} />
         <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
           <View style={HEADER}>
-            <Text style={HEADER_TEXT}>오후 5:50</Text>
-            <MaterialCommunityIcons name="clock-plus-outline" size={30} color="#b483de" />
+            <TouchableOpacity
+              style={TOUCH_ADD_ALARM}
+              onPress={() => navigation.navigate("alarmAdd")}
+            >
+              <Text style={HEADER_TEXT}>{alarmTime ? alarmTime : "끄기"}</Text>
+              <MaterialCommunityIcons name="clock-plus-outline" size={30} color="#b483de" />
+            </TouchableOpacity>
           </View>
           <View style={HEADER_IMG}>
             <Ionicons name="flask-outline" size={110} color="#d4d8de" />

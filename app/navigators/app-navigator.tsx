@@ -15,6 +15,7 @@ import Tabs from "./tab-navigator"
 import { DemoListScreen, DemoScreen, WelcomeScreen } from "../screens"
 import { AlarmAddScreen } from "../screens/alarm/alarm-add-screen"
 import { SleepScreen } from "../screens/sleep/sleep-screen"
+import { Text } from "../components"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -43,6 +44,8 @@ export type NavigatorParamList = {
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<NavigatorParamList>()
 
+const CANCLE = { color: "#28ace5", fontSize: 17, fontWeight: 500 }
+
 const AppStack = () => {
   return (
     <Stack.Navigator
@@ -56,9 +59,25 @@ const AppStack = () => {
       <Stack.Screen name="demo" component={DemoScreen} />
       <Stack.Screen name="demoList" component={DemoListScreen} />
       {/** 🔥 Your screens go here */}
-      {/* <Stack.Screen name="record" component={RecordScreen} /> */}
+      {/* <Stack.Screen name="alarm" component={AlarmAddScreen} /> */}
       <Stack.Screen name="tabs" component={Tabs} />
-      <Stack.Screen name="alarmAdd" component={AlarmAddScreen} />
+      <Stack.Group
+        screenOptions={{
+          presentation: "modal",
+          // headerShown: true,
+          // headerStyle: { backgroundColor: "#1a1b20" },
+        }}
+      >
+        <Stack.Screen
+          name="alarmAdd"
+          component={AlarmAddScreen}
+          // options={{
+          //   headerTitle: "알람 추가",
+          //   headerTitleStyle: { color: "#fff" },
+          //   headerLeft: () => <Text text={"취소"} style={CANCLE}></Text>,
+          // }}
+        />
+      </Stack.Group>
       <Stack.Screen name="sleep" component={SleepScreen} />
     </Stack.Navigator>
   )

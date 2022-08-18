@@ -20,6 +20,7 @@ const TITLE: TextStyle = { textAlign: "center" }
 const TITLE_MIDDLE: ViewStyle = { flex: 1, justifyContent: "center" }
 const LEFT: ViewStyle = { width: 32 }
 const RIGHT: ViewStyle = { width: 32 }
+const SIDE_TITLE: TextStyle = { color: "#28ace5", fontSize:17, opacity:100}
 
 /**
  * Header that appears on many screens. Will hold navigation buttons and screen title.
@@ -29,7 +30,9 @@ export function Header(props: HeaderProps) {
     onLeftPress,
     onRightPress,
     rightIcon,
+    rightText,
     leftIcon,
+    leftText,
     headerText,
     headerTx,
     style,
@@ -44,7 +47,9 @@ export function Header(props: HeaderProps) {
           <Icon icon={leftIcon} />
         </Button>
       ) : (
-        <View style={LEFT} />
+          <View style={LEFT}>
+            {leftText && (<Text style={SIDE_TITLE} onPress={onLeftPress} >{leftText}</Text>)}
+        </View>
       )}
       <View style={TITLE_MIDDLE}>
         <Text style={[TITLE, titleStyle]} text={header} />
@@ -54,7 +59,9 @@ export function Header(props: HeaderProps) {
           <Icon icon={rightIcon} />
         </Button>
       ) : (
-        <View style={RIGHT} />
+          <View style={RIGHT} >
+            {rightText && (<Text style={SIDE_TITLE} onPress={onRightPress}>{rightText}</Text>)}
+        </View>
       )}
     </View>
   )
