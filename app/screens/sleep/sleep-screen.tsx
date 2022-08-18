@@ -22,19 +22,24 @@ const HEADER: TextStyle = {
   paddingTop: spacing[3],
 }
 const HEADER_TITLE: TextStyle = {
-  fontSize: 12,
+  fontSize: 15,
   fontWeight: "bold",
   letterSpacing: 1.5,
-  lineHeight: 15,
+  lineHeight: 18,
   textAlign: "center",
+  color: "black",
 }
 const BULLET_TEXT: TextStyle = {
-  flex: 1,
-  color: "red",
-  fontSize: 20,
-  lineHeight: 22,
+  color: "white",
+  fontSize: 22,
+  fontWeight: "600",
 }
-
+const SLEEP_BOX: ViewStyle = {
+  backgroundColor: "black",
+  flex: 1,
+  justifyContent: "center",
+  alignItems: "center",
+}
 export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = observer(
   ({ navigation }) => {
     const goBack = () => navigation.goBack()
@@ -80,14 +85,14 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
         {/* <GradientBackground colors={["#422443", "#281b34"]} /> */}
         <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
           <Header
-            headerText="알람변경"
+            headerText="잠자는 화면"
             leftIcon="back"
             onLeftPress={goBack}
             style={HEADER}
             titleStyle={HEADER_TITLE}
           />
-          <View>
-            <Text style={BULLET_TEXT}>편안히 주무세욘</Text>
+          <View style={SLEEP_BOX}>
+            <Text style={BULLET_TEXT}>편안히 주무세요</Text>
           </View>
         </Screen>
       </View>
