@@ -1,14 +1,11 @@
 import React, { useEffect, FC, useState } from "react"
-import { FlatList, TextStyle, View, ViewStyle, ImageStyle, Alert, Button } from "react-native"
+import { TextStyle, View, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import { Header, Screen, Text, AutoImage as Image, GradientBackground } from "../../components"
+import { Header, Screen, Text } from "../../components"
 import { color, spacing } from "../../theme"
-import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 import { Audio } from "expo-av"
-import { Recording } from "expo-av/build/Audio"
-import { SingleEntryPlugin } from "webpack"
 import { load } from "../../utils/storage"
 import moment from "moment"
 import BackgroundTimer from "react-native-background-timer"
@@ -31,27 +28,16 @@ const HEADER_TITLE: TextStyle = {
   lineHeight: 15,
   textAlign: "center",
 }
-const LIST_CONTAINER: ViewStyle = {
-  alignItems: "center",
-  flexDirection: "row",
-  padding: 10,
-}
-const IMAGE: ImageStyle = {
-  borderRadius: 35,
-  height: 65,
-  width: 65,
-}
-const LIST_TEXT: TextStyle = {
-  marginLeft: 10,
-}
-const FLAT_LIST: ViewStyle = {
-  paddingHorizontal: spacing[4],
+const BULLET_TEXT: TextStyle = {
+  flex: 1,
+  color: "red",
+  fontSize: 20,
+  lineHeight: 22,
 }
 
 export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = observer(
   ({ navigation }) => {
     const goBack = () => navigation.goBack()
-    const [alarmTime, setAlarmTime] = useState<string>()
     const [timer, setTimer] = useState<number>()
 
     useEffect(() => {
@@ -60,10 +46,14 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
           const currTime = moment(new Date())
           const savedTime = moment(data.time)
           const diff = moment.duration(savedTime.diff(currTime)).asMilliseconds()
-          const timeout = BackgroundTimer.setTimeout(() => {
-            playSound()
-          }, diff)
-          setTimer(timeout)
+          if (diff > 0) {
+            const timeout = BackgroundTimer.setTimeout(() => {
+              playSound()
+            }, diff)
+            setTimer(timeout)
+          } else {
+            clearTime()
+          }
         }
       })
     }, [])
@@ -81,10 +71,6 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
       const { sound } = await Audio.Sound.createAsync(
         require("../../../assets/ringtones/walk_in_the_forest.mp3"),
       )
-      // setSound(sound)
-      // console.log("Playing Sound")
-      // sound.setIsLoopingAsync(true)
-      // await sound.playAsync()
       sound.setIsLoopingAsync(true)
       await sound.playAsync()
     }
@@ -101,7 +87,7 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
             titleStyle={HEADER_TITLE}
           />
           <View>
-            <Text>편안히 주무세욘</Text>
+            <Text style={BULLET_TEXT}>편안히 주무세욘</Text>
           </View>
         </Screen>
       </View>
