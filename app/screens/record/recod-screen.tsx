@@ -180,14 +180,16 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
     }, [isSavedRecording, isDeletedRecording])
 
     useEffect(() => {
-      load("alarm").then((data) => {
-        if (data && data.time) {
-          const t = moment(data.time).locale("ko").format("LT")
-          setAlarmTime(t)
-        } else {
-          setAlarmTime("")
-        }
-      })
+      if (isFocused) {
+        load("alarm").then((data) => {
+          if (data && data.time) {
+            const t = moment(data.time).locale("ko").format("LT")
+            setAlarmTime(t)
+          } else {
+            setAlarmTime("")
+          }
+        })
+      }
     }, [isFocused])
 
     useEffect(() => {
