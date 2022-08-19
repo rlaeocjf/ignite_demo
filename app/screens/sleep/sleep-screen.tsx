@@ -1,14 +1,16 @@
 import React, { useEffect, FC, useState } from "react"
-import { TextStyle, View, ViewStyle } from "react-native"
+import { TextStyle, View, ViewStyle, ImageBackground } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import { Header, Screen, Text } from "../../components"
+import { Text } from "../../components"
 import { color, spacing } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
 import { Audio } from "expo-av"
 import { load } from "../../utils/storage"
 import moment from "moment"
 import BackgroundTimer from "react-native-background-timer"
+import { Ionicons } from "@expo/vector-icons"
+import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler"
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -35,7 +37,6 @@ const BULLET_TEXT: TextStyle = {
   fontWeight: "600",
 }
 const SLEEP_BOX: ViewStyle = {
-  backgroundColor: "black",
   flex: 1,
   justifyContent: "center",
   alignItems: "center",
@@ -81,20 +82,70 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
     }
 
     return (
+      // <View testID="SleepScreen" style={FULL}>
+      //   <GradientBackground colors={["#422443", "#281b34"]} />
+      //   <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
+      //     <View style={SLEEP_BOX}>
+      //       <Text style={BULLET_TEXT}>편안히 주무세요</Text>
+      //     </View>
+      //   </Screen>
+      // </View>
       <View testID="SleepScreen" style={FULL}>
-        {/* <GradientBackground colors={["#422443", "#281b34"]} /> */}
-        <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
-          <Header
-            headerText="잠자는 화면"
-            leftIcon="back"
-            onLeftPress={goBack}
-            style={HEADER}
-            titleStyle={HEADER_TITLE}
-          />
-          <View style={SLEEP_BOX}>
-            <Text style={BULLET_TEXT}>편안히 주무세요</Text>
+        <ImageBackground
+          source={require("../../../assets/images/bg_sleep.gif")}
+          style={{ width: "100%", height: "100%" }}
+        >
+          <View
+            style={{
+              flex: 10,
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{ color: "#8793a5", fontSize: 70, marginBottom: 50 }}
+              text={moment(new Date()).format("HH:mm")}
+              onPress={() => {
+                console.log("click")
+              }}
+            />
           </View>
-        </Screen>
+          <View
+            style={{
+              flex: 9,
+              justifyContent: "flex-start",
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{ color: "#8793a5", fontSize: 16, fontWeight: "500", marginVertical: 40 }}
+              text="코골이 감지가 5분 후 시작됩니다"
+            />
+            <Text style={{ color: "#8793a5", fontSize: 23, fontWeight: "500" }} text="오후 3:50" />
+            <Ionicons
+              name="alarm-outline"
+              size={40}
+              color="#8793a5"
+              style={{ marginTop: 5, marginBottom: 60 }}
+            />
+            <GestureHandlerRootView>
+              <Swipeable
+                onEnded={() => {
+                  console.log("end")
+                }}
+                onSwipeableOpen={() => {
+                  console.log("asdf")
+                }}
+                renderRightActions={() => {
+                  console.log()
+                }}
+                useNativeAnimations={true}
+              >
+                <Text style={{ color: "#8793a5", fontSize: 24 }} text="옆으로 밀어 세션 중지" />
+              </Swipeable>
+            </GestureHandlerRootView>
+          </View>
+        </ImageBackground>
       </View>
     )
   },

@@ -12,7 +12,7 @@ const FULL: ViewStyle = {
 }
 const CONTAINER: ViewStyle = {
   backgroundColor: color.transparent,
-  marginTop:-47
+  // marginTop:-47
 }
 const HEADER: TextStyle = {
   backgroundColor: "#1a1b20" 
@@ -54,7 +54,6 @@ export const AlarmAddScreen: FC<StackScreenProps<NavigatorParamList, "alarm">> =
     return (
       <View testID="AlarmAddScreen" style={FULL}>
         <GradientBackground colors={["#0f3352", "#3a444f"]} />
-        <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
           <Header
             headerText="알림 추가"
             leftText="취소"
@@ -66,12 +65,11 @@ export const AlarmAddScreen: FC<StackScreenProps<NavigatorParamList, "alarm">> =
           />
           <View style={{ alignItems: "center" }}>
             <GradientBackground colors={["#191d23", "#1f252c"]} />
-            <DatePicker date={date} mode="time" minuteInterval={1} onDateChange={setDate} textColor={"#d3dfeb"} />
+          <DatePicker date={date} mode="time" minuteInterval={1} onDateChange={setDate} textColor={"#d3dfeb"} />
             <TouchableOpacity style={TOUCH_REMOVE_ALARM} onPress={removeAlarm}>
               <Text text="알림 끄기" style={TOUCH_REMOVE_ALARM_TEXT}></Text>
             </TouchableOpacity>
           </View>
-        </Screen>
       </View>
     )
   },
