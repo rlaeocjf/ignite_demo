@@ -81,6 +81,9 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
       await sound.playAsync()
     }
 
+    const onRenderLeftActions = () => {
+      return <View style={{ width: "100%" }}></View>
+    }
     return (
       // <View testID="SleepScreen" style={FULL}>
       //   <GradientBackground colors={["#422443", "#281b34"]} />
@@ -130,16 +133,9 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
             />
             <GestureHandlerRootView>
               <Swipeable
-                onEnded={() => {
-                  console.log("end")
-                }}
-                onSwipeableOpen={() => {
-                  console.log("asdf")
-                }}
-                renderRightActions={() => {
-                  console.log()
-                }}
-                useNativeAnimations={true}
+                renderLeftActions={onRenderLeftActions}
+                leftThreshold={10}
+                rightThreshold={15}
               >
                 <Text style={{ color: "#8793a5", fontSize: 24 }} text="옆으로 밀어 세션 중지" />
               </Swipeable>
