@@ -259,7 +259,7 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
               text="시작"
               style={BUTTON}
               textStyle={BUTTON_TEXT}
-              onPress={() => Alert.alert("pressed")}
+              onPress={() => navigation.navigate("sleep")}
             />
           </View>
           {/* <View style={{ backgroundColor: "#32cd32", flex: 1 }}>
