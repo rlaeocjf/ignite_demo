@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons"
 import { AlarmScreen } from "../screens/alarm/alarm-screen"
 import { WelcomeScreen } from "../screens"
 import { SwipeScreen } from "../screens/swipe/swipe-screen"
+import { RecordListScreen } from "../screens/record/record-list-screen"
 
 const Tab = createBottomTabNavigator()
 
@@ -28,8 +29,8 @@ function Tabs() {
         }}
       />
       <Tab.Screen
-        name="swipe"
-        component={SwipeScreen}
+        name="녹음목록"
+        component={RecordListScreen}
         options={{
           tabBarIcon: ({ color }) => <Ionicons name={"ios-home"} color={color} size={30} />,
         }}
