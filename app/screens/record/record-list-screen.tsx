@@ -6,7 +6,6 @@ import { Audio } from "expo-av"
 import { getAllItemFromAsync } from "../../storage"
 import { remove } from "../../utils/storage"
 import { View, ViewStyle,  Text, Button} from "react-native"
-import {  } from "../../components"
 import { useIsFocused } from "@react-navigation/native"
 
 const FULL: ViewStyle = {
@@ -38,8 +37,8 @@ export const RecordListScreen: FC<StackScreenProps<NavigatorParamList, "recordLi
       })
       if (status.isLoaded) {
         console.log(status.durationMillis)
+        await sound.playAsync();
       }
-      sound.playAsync()
     }
     useEffect(() => {
         if (isFocused) {

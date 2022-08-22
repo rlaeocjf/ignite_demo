@@ -4,8 +4,8 @@ import { RecordScreen } from "../screens/record/recod-screen"
 import { Ionicons } from "@expo/vector-icons"
 import { AlarmScreen } from "../screens/alarm/alarm-screen"
 import { WelcomeScreen } from "../screens"
-import { SwipeScreen } from "../screens/swipe/swipe-screen"
 import { RecordListScreen } from "../screens/record/record-list-screen"
+import { SnoozeScreen } from "../screens/snooze/snooze-screen"
 
 const Tab = createBottomTabNavigator()
 
@@ -32,7 +32,7 @@ function Tabs() {
         name="녹음목록"
         component={RecordListScreen}
         options={{
-          tabBarIcon: ({ color }) => <Ionicons name={"ios-home"} color={color} size={30} />,
+          tabBarIcon: ({ color }) => <Ionicons name={"list-outline"} color={color} size={30} />,
         }}
       />
       <Tab.Screen
@@ -43,13 +43,13 @@ function Tabs() {
           tabBarIcon: ({ color }) => <Ionicons name={"mic"} color={color} size={30} />,
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="알람"
         component={AlarmScreen}
         options={{
           tabBarIcon: ({ color }) => <Ionicons name={"alarm"} color={color} size={30} />,
         }}
-      />
+      /> */}
     </Tab.Navigator>
   )
 }

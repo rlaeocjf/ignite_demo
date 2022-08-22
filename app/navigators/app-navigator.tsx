@@ -18,6 +18,7 @@ import { SleepScreen } from "../screens/sleep/sleep-screen"
 import { Text } from "../components"
 import { SwipeScreen } from "../screens/swipe/swipe-screen"
 import { RecordListScreen } from "../screens/record/record-list-screen"
+import { SnoozeScreen } from "../screens/snooze/snooze-screen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -42,6 +43,7 @@ export type NavigatorParamList = {
   sleep: undefined
   swipe: undefined
   recordList: undefined
+  snooze: undefined
   // 🔥 Your screens go here
 }
 
