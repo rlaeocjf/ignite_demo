@@ -89,7 +89,6 @@ const BTN_SNOOZE_CONTAINER = {
 
 export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = observer(
   ({ navigation }) => {
-    const goBack = () => navigation.goBack()
     const [timer, setTimer] = useState<number>()
     const [currTime, setCurrTime] = useState<Date>()
     const [alarm, setAlarm] = useState<string>()
@@ -100,9 +99,9 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
 
     const startRecording = async () => {
       try {
-        console.log("Requesting permissions..")
+        // console.log("Requesting permissions..")
         const permission = await Audio.requestPermissionsAsync()
-        console.log(permission)
+        // console.log(permission)
         if (permission.status === "granted") {
           await Audio.setAudioModeAsync({
             allowsRecordingIOS: true,
@@ -110,14 +109,14 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
             // 백그라운드 모드에서 녹음 할때..
             staysActiveInBackground: true,
           })
-          console.log("Starting recording..")
+          // console.log("Starting recording..")
           const { recording } = await Audio.Recording.createAsync(
             Audio.RECORDING_OPTIONS_PRESET_LOW_QUALITY,
           )
           setRecording(recording)
-          console.log("Recording started")
+          // console.log("Recording started")
         } else {
-          console.log("please grant permission to app to access microphone")
+          // console.log("please grant permission to app to access microphone")
         }
       } catch (err) {
         console.log(err)
@@ -125,14 +124,14 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
     }
 
     const stopRecording = async () => {
-      console.log("Stopping recording..")
+      // console.log("Stopping recording..")
       setRecording(undefined)
       await recording.stopAndUnloadAsync()
-      const uri = recording.getURI()
-      console.log("Recording stopped and stored at", uri)
+      // const uri = recording.getURI()
+      // console.log("Recording stopped and stored at", uri)
       const { status } = await recording.createNewLoadedSoundAsync()
       if (status.isLoaded) {
-        console.log(recording.getURI())
+        // console.log(recording.getURI())
         saveString(`recording_${new Date().getTime()}`, recording.getURI())
       }
     }
@@ -140,6 +139,7 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
     useEffect(() => {
       startRecording()
       let timeout: number
+      console.log(timeout)
       const liveTime = setInterval(() => {
         setCurrTime(new Date())
       }, 1000)
@@ -148,18 +148,21 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
         if (data && data.time) {
           setAlarm(data.time)
           const currTime = moment(new Date())
-          const savedTime = moment(data.time)
-          const diff = moment.duration(savedTime.diff(currTime)).asMilliseconds()
-          if (diff > 0) {
-            timeout = BackgroundTimer.setTimeout(() => {
-              setReachTime(true)
-              playSound()
-            }, diff)
-            setTimer(timeout)
+          const savedTime = moment(data.time).startOf("minutes")
+          let diff = moment.duration(savedTime.diff(currTime)).asMilliseconds()
+          if (diff < 0) {
+            savedTime.add(1, "days")
           }
+          diff = moment.duration(savedTime.diff(currTime)).asMilliseconds()
+          timeout = BackgroundTimer.setTimeout(() => {
+            setReachTime(true)
+            playSound()
+          }, diff)
+          setTimer(timeout)
         }
       })
       return () => {
+        clearTime(timeout)
         clearTime(timer)
         clearIntervaTime(liveTime)
       }
@@ -174,7 +177,7 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
     }
 
     const playSound = async () => {
-      console.log("Loading Sound")
+      // console.log("Loading Sound")
       await Audio.setAudioModeAsync({
         playsInSilentModeIOS: true,
         staysActiveInBackground: true,
@@ -190,7 +193,9 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
     }
 
     const stopSound = async () => {
-      await playback.stopAsync()
+      if (playback && playback.stopAsync) {
+        await playback.stopAsync()
+      }
     }
 
     const onRenderLeftActions = () => {
