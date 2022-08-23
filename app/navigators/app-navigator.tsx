@@ -19,6 +19,7 @@ import { Text } from "../components"
 import { SwipeScreen } from "../screens/swipe/swipe-screen"
 import { RecordListScreen } from "../screens/record/record-list-screen"
 import { SnoozeScreen } from "../screens/snooze/snooze-screen"
+import { SleepDelayScreen } from "../screens/sleep/sleep-delay-screen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -44,6 +45,7 @@ export type NavigatorParamList = {
   swipe: undefined
   recordList: undefined
   snooze: undefined
+  sleepDelay: undefined
   // 🔥 Your screens go here
 }
 
@@ -85,6 +87,7 @@ const AppStack = () => {
         />
       </Stack.Group>
       <Stack.Screen name="sleep" component={SleepScreen} />
+      <Stack.Screen name="sleepDelay" component={SleepDelayScreen} />
       <Stack.Screen name="recordList" component={RecordListScreen} />
     </Stack.Navigator>
   )

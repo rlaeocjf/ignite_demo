@@ -139,7 +139,6 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
     useEffect(() => {
       startRecording()
       let timeout: number
-      console.log(timeout)
       const liveTime = setInterval(() => {
         setCurrTime(new Date())
       }, 1000)
