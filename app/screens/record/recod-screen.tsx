@@ -3,7 +3,7 @@ import { TextStyle, View, ViewStyle, ImageStyle, Alert, TouchableOpacity } from 
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import { GradientBackground, Screen, Text, Button } from "../../components"
-import { color, spacing } from "../../theme"
+import { color } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
 import { Audio } from "expo-av"
 import { Recording } from "expo-av/build/Audio"
@@ -183,7 +183,8 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
       if (isFocused) {
         load("alarm").then((data) => {
           if (data && data.time) {
-            const t = moment(data.time).locale("ko").format("LT")
+            // const t = moment(data.time).locale("ko").format("LT")
+            const t = moment(data.time).format("LT")
             setAlarmTime(t)
           } else {
             setAlarmTime("")
@@ -243,7 +244,7 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
             <View style={BOX}>
               <Feather name="play-circle" size={65} color="#c7cbd1" />
               <Text style={BOX_TEXT} text="결과"></Text>
-              <Text style={BOX_SUB_TEXT} text="이번달 2회"></Text>
+              <Text style={BOX_SUB_TEXT} text="이번달 1회"></Text>
             </View>
             <View style={BOX}>
               <Ionicons name="ios-finger-print-outline" size={65} color="#c7cbd1" />
