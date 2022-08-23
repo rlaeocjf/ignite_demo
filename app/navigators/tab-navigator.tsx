@@ -21,11 +21,19 @@ function Tabs() {
         },
       }}
     >
-      <Tab.Screen
+      {/* <Tab.Screen
         name="home"
         component={WelcomeScreen}
         options={{
           tabBarIcon: ({ color }) => <Ionicons name={"ios-home"} color={color} size={30} />,
+        }}
+      /> */}
+      <Tab.Screen
+        name="녹음"
+        component={RecordScreen}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color }) => <Ionicons name={"mic"} color={color} size={30} />,
         }}
       />
       <Tab.Screen
@@ -33,14 +41,6 @@ function Tabs() {
         component={RecordListScreen}
         options={{
           tabBarIcon: ({ color }) => <Ionicons name={"list-outline"} color={color} size={30} />,
-        }}
-      />
-      <Tab.Screen
-        name="녹음"
-        component={RecordScreen}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color }) => <Ionicons name={"mic"} color={color} size={30} />,
         }}
       />
       {/* <Tab.Screen

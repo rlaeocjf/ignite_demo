@@ -2,7 +2,7 @@ import React, { useEffect, FC, useState } from "react"
 import { TextStyle, View, ViewStyle, ImageBackground, Image } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import { GradientBackground, Screen, Text } from "../../components"
+import { Button, GradientBackground, Screen, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
 import { Audio } from "expo-av"
 import { load, saveString } from "../../utils/storage"
@@ -10,7 +10,7 @@ import moment from "moment"
 import BackgroundTimer from "react-native-background-timer"
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons"
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler"
-import { Recording } from "expo-av/build/Audio"
+import { Recording, Sound } from "expo-av/build/Audio"
 import { color } from "../../theme"
 
 const FULL: ViewStyle = {
@@ -41,7 +41,12 @@ const START_SESSION_TEXT: TextStyle = {
   marginTop: 30,
 }
 const ALARM_BOX: ViewStyle = { flex: 2, justifyContent: "flex-start", alignItems: "center" }
-const ALARM_TEXT: TextStyle = { color: "#8793a5", fontSize: 23, fontWeight: "500", marginTop: 13 }
+const CURR_TIME: TextStyle = { color: "#8793a5", fontSize: 23, fontWeight: "500", marginTop: 13 }
+const CURR_TIME_IN_ALARM: TextStyle = {
+  color: "#d1693d",
+  fontSize: 50,
+  paddingBottom: 110,
+}
 const STOP_SESSION_BOX: ViewStyle = { flex: 3, alignItems: "center" }
 const STOP_SESSION_TEXT: TextStyle = {
   color: "#8793a5",
@@ -57,15 +62,41 @@ const ALARM_ICON = {
   marginTop: 5,
   marginBottom: 60,
 }
+const IMAGE_CONTAINER = { flex: 5, justifyContent: "flex-end", alignItems: "center" }
+const IMAGE_SUNRISE = {
+  justifyContent: "center",
+  alignItems: "center",
+  width: "100%",
+  height: "70%",
+}
+const SNOOZE_CONTAINER = { flex: 2, justifyContent: "center", alignItems: "center" }
+const BTN_SNOOZE = {
+  backgroundColor: "#436e9d",
+  borderStyle: "solid",
+  borderWidth: 1,
+  borderColor: "#becedf",
+  borderRadius: 20,
+  paddingVertical: 14,
+}
+const TEXT_SNOOZE = {
+  fontSize: 17,
+}
+const BTN_SNOOZE_CONTAINER = {
+  flex: 1,
+  width: "40%",
+  justifyContent: "center",
+}
 
 export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = observer(
   ({ navigation }) => {
     const goBack = () => navigation.goBack()
     const [timer, setTimer] = useState<number>()
+    const [currTime, setCurrTime] = useState<Date>()
     const [alarm, setAlarm] = useState<string>()
     const [reachTime, setReachTime] = useState<boolean>(false)
     const [delay, setDelay] = useState<string>()
     const [recording, setRecording] = useState<Recording>()
+    const [playback, setPlayback] = useState<Sound>()
 
     const startRecording = async () => {
       try {
@@ -107,9 +138,12 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
     }
 
     useEffect(() => {
-      setTimeout(() => {
-        startRecording()
+      startRecording()
+      let timeout: number
+      const liveTime = setInterval(() => {
+        setCurrTime(new Date())
       }, 1000)
+
       load("alarm").then((data) => {
         if (data && data.time) {
           setAlarm(data.time)
@@ -117,20 +151,26 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
           const savedTime = moment(data.time)
           const diff = moment.duration(savedTime.diff(currTime)).asMilliseconds()
           if (diff > 0) {
-            const timeout = BackgroundTimer.setTimeout(() => {
+            timeout = BackgroundTimer.setTimeout(() => {
               setReachTime(true)
               playSound()
             }, diff)
             setTimer(timeout)
-          } else {
-            clearTime()
           }
         }
       })
+      return () => {
+        clearTime(timer)
+        clearIntervaTime(liveTime)
+      }
     }, [])
 
-    const clearTime = () => {
+    const clearTime = (timer: number) => {
       BackgroundTimer.clearTimeout(timer)
+    }
+
+    const clearIntervaTime = (interval: NodeJS.Timer) => {
+      clearInterval(interval)
     }
 
     const playSound = async () => {
@@ -143,11 +183,14 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
         require("../../../assets/ringtones/walk_in_the_forest.mp3"),
       )
       if (status.isLoaded) {
-        console.log(status.durationMillis)
-        console.log("load media..")
+        setPlayback(sound)
         sound.setIsLoopingAsync(true)
         await sound.playAsync()
       }
+    }
+
+    const stopSound = async () => {
+      await playback.stopAsync()
     }
 
     const onRenderLeftActions = () => {
@@ -159,19 +202,32 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
           <View style={FULL}>
             <GradientBackground colors={["#81a1c9", "#426b9c"]} />
             <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
-              <View style={{ flex: 5, justifyContent: "flex-end", alignItems: "center" }}>
-                <Image
-                  style={{ width: "70%", height: "80%", resizeMode: "contain" }}
+              <View style={IMAGE_CONTAINER}>
+                <ImageBackground
                   source={require("../../../assets/images/sun-color-icon.png")}
-                />
+                  resizeMode="contain"
+                  style={IMAGE_SUNRISE}
+                >
+                  <Text style={CURR_TIME_IN_ALARM} text={moment(alarm).format("HH:mm")} />
+                </ImageBackground>
               </View>
-              <View style={{ flex: 2, justifyContent: "center", alignItems: "center" }}>
-                <GestureHandlerRootView>
+              <View style={SNOOZE_CONTAINER}>
+                <View style={BTN_SNOOZE_CONTAINER}>
+                  <Button
+                    text="스누즈"
+                    onPress={stopSound}
+                    textStyle={TEXT_SNOOZE}
+                    style={BTN_SNOOZE}
+                  ></Button>
+                </View>
+                <GestureHandlerRootView style={{ flex: 1 }}>
                   <Swipeable
                     renderLeftActions={onRenderLeftActions}
                     leftThreshold={10}
                     rightThreshold={15}
                     onEnded={() => {
+                      stopSound()
+                      stopRecording()
                       navigation.goBack()
                     }}
                   >
@@ -187,7 +243,7 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
         ) : (
           <ImageBackground source={require("../../../assets/images/bg_sleep.gif")} style={BG}>
             <View style={TIME_BOX}>
-              <Text style={TIME_TEXT} text={moment(new Date()).format("HH:mm")} />
+              <Text style={TIME_TEXT} text={moment(currTime).format("HH:mm:ss")} />
             </View>
             <View style={START_SESSION_BOX}>
               {delay && (
@@ -197,7 +253,7 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
             <View style={ALARM_BOX}>
               {alarm && (
                 <>
-                  <Text style={ALARM_TEXT} text={moment(alarm).format("LT")} />
+                  <Text style={CURR_TIME} text={moment(alarm).format("LT")} />
                   <Ionicons name="alarm-outline" size={40} color="#8793a5" style={ALARM_ICON} />
                 </>
               )}
