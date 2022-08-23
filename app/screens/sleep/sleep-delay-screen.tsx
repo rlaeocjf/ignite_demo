@@ -1,14 +1,24 @@
-import React, { FC, useState } from "react"
-import { View, ViewStyle, TextStyle, TouchableOpacity } from "react-native"
+import React, { useEffect, FC, useState } from "react"
+import { TextStyle, View, ViewStyle, ImageBackground, Image } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import { Header, Screen, Text, GradientBackground } from "../../components"
-import { color } from "../../theme"
+import { Button, GradientBackground, Header, Screen, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
+import { Audio } from "expo-av"
+import { load, save, saveString } from "../../utils/storage"
+import moment from "moment"
+import BackgroundTimer from "react-native-background-timer"
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons"
+import { GestureHandlerRootView, Swipeable, TouchableOpacity } from "react-native-gesture-handler"
+import { Recording, Sound } from "expo-av/build/Audio"
+import { color } from "../../theme"
 import DatePicker from "react-native-date-picker"
-import { remove, save } from "../../utils/storage"
+
 const FULL: ViewStyle = {
   flex: 1,
+}
+const CONTAINER: ViewStyle = {
+  backgroundColor: color.transparent,
 }
 const HEADER: TextStyle = {
   backgroundColor: "#1a1b20",
@@ -19,19 +29,8 @@ const HEADER_TITLE: TextStyle = {
   letterSpacing: 1.5,
   textAlign: "center",
 }
-const TOUCH_REMOVE_ALARM: ViewStyle = {
-  paddingVertical: 15,
-  marginTop: 20,
-  backgroundColor: "#7f888e",
-  width: "100%",
-}
-const TOUCH_REMOVE_ALARM_TEXT: TextStyle = {
-  textAlign: "center",
-  color: "#a93039",
-  fontWeight: "500",
-  fontSize: 18,
-}
-export const AlarmAddScreen: FC<StackScreenProps<NavigatorParamList, "alarm">> = observer(
+
+export const SleepDelayScreen: FC<StackScreenProps<NavigatorParamList, "sleepDelay">> = observer(
   ({ navigation }) => {
     const [date, setDate] = useState(new Date())
     const goBack = () => navigation.goBack()
@@ -41,21 +40,14 @@ export const AlarmAddScreen: FC<StackScreenProps<NavigatorParamList, "alarm">> =
       }
       goBack()
     }
-    const removeAlarm = () => {
-      if (date) {
-        remove("alarm")
-      }
-      goBack()
-    }
     return (
-      <View testID="AlarmAddScreen" style={FULL}>
-        <GradientBackground colors={["#0f3352", "#3a444f"]} />
+      <View testID="SleepDelayScreen" style={FULL}>
+        <GradientBackground colors={["#1a1b20", "#314752"]} />
         <Header
-          headerText="알림 추가"
+          headerText="수면 시작 시간"
           leftText="취소"
           onLeftPress={goBack}
           rightText="저장"
-          onRightPress={saveAlarm}
           style={HEADER}
           titleStyle={HEADER_TITLE}
         />
@@ -68,9 +60,6 @@ export const AlarmAddScreen: FC<StackScreenProps<NavigatorParamList, "alarm">> =
             onDateChange={setDate}
             textColor={"#d3dfeb"}
           />
-          <TouchableOpacity style={TOUCH_REMOVE_ALARM} onPress={removeAlarm}>
-            <Text text="알림 끄기" style={TOUCH_REMOVE_ALARM_TEXT}></Text>
-          </TouchableOpacity>
         </View>
       </View>
     )

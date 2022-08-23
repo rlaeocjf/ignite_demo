@@ -1,14 +1,11 @@
 import React, { useEffect, FC, useState } from "react"
-import { TextStyle, View, ViewStyle, ImageStyle, Alert, TouchableOpacity } from "react-native"
+import { TextStyle, View, ViewStyle, TouchableOpacity } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import { GradientBackground, Screen, Text, Button } from "../../components"
 import { color } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
-import { Audio } from "expo-av"
-import { Recording } from "expo-av/build/Audio"
-import { getAllItemFromAsync, setItemToAsync } from "../../storage"
-import { load, remove } from "../../utils/storage"
+import { load } from "../../utils/storage"
 import { MaterialCommunityIcons, Ionicons, Feather } from "@expo/vector-icons"
 import moment from "moment"
 import { useIsFocused } from "@react-navigation/native"
@@ -57,7 +54,8 @@ const BOX_SUB_TEXT = {
 const BUTTON = {
   width: "93%",
   backgroundColor: "#2aa5db",
-  paddingVertical: 17,
+  // paddingVertical: 17,
+  height: 55,
   borderRadius: 10,
   marginTop: 20,
 }
@@ -65,6 +63,7 @@ const BUTTON = {
 const BUTTON_TEXT = {
   color: "#fff",
   fontSize: 30,
+  lineHeight: 43,
   fontWeight: "500",
 }
 
@@ -87,97 +86,8 @@ const HEADER_IMG: ViewStyle = {
 }
 export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = observer(
   ({ navigation }) => {
-    const [recording, setRecording] = useState<Recording>()
-    const [savedRecordings, setSavedRecordings] = useState<{ key: string; val: string }[]>([])
-    const [message, setMessage] = useState<string>("")
-    const [isDeletedRecording, setIsdeletedRecording] = useState<boolean>(false)
-    const [isSavedRecording, setIsSavedRecording] = useState<boolean>(false)
     const [alarmTime, setAlarmTime] = useState<string>()
-
     const isFocused = useIsFocused()
-
-    const startRecording = async () => {
-      try {
-        console.log("Requesting permissions..")
-        const permission = await Audio.requestPermissionsAsync()
-        console.log(permission)
-        if (permission.status === "granted") {
-          await Audio.setAudioModeAsync({
-            allowsRecordingIOS: true,
-            playsInSilentModeIOS: true,
-            // 백그라운드 모드에서 녹음 할때..
-            staysActiveInBackground: true,
-          })
-          console.log("Starting recording..")
-          const { recording } = await Audio.Recording.createAsync(
-            Audio.RECORDING_OPTIONS_PRESET_LOW_QUALITY,
-          )
-          setRecording(recording)
-          console.log("Recording started")
-        } else {
-          setMessage("please grant permission to app to access microphone")
-        }
-      } catch (err) {
-        console.log(err)
-      }
-    }
-
-    const stopRecording = async () => {
-      console.log("Stopping recording..")
-      setRecording(undefined)
-      await recording.stopAndUnloadAsync()
-      const uri = recording.getURI()
-      console.log("Recording stopped and stored at", uri)
-
-      const { sound, status } = await recording.createNewLoadedSoundAsync()
-      if (status.isLoaded) {
-        console.log(recording.getURI())
-        setItemToAsync(`recording_${new Date().getTime()}`, recording.getURI()).then(() => {
-          setIsSavedRecording(true)
-        })
-        // updateRecordings.push({
-        //   sound: sound,
-        //   duration: getDurationFormatted(status.durationMillis),
-        //   file: recording.getURI,
-        // })
-      }
-      // setRecordings(updateRecordings)
-    }
-
-    const getDurationFormatted = (millis: number) => {
-      const minutes = millis / 1000 / 60
-      const minutesDisplay = Math.floor(minutes)
-      const seconds = Math.round((minutes - minutesDisplay) * 60)
-      const secondsDisplay = seconds < 10 ? `0{seconds}` : seconds
-      return `${minutesDisplay}:${secondsDisplay}`
-    }
-
-    const loadSavedRecordings = async () => {
-      getAllItemFromAsync("recording").then((data) => {
-        setSavedRecordings(data)
-      })
-    }
-
-    const playRecording = async (uri: string) => {
-      const { sound, status } = await Audio.Sound.createAsync({
-        uri,
-      })
-      if (status.isLoaded) {
-        console.log(status.durationMillis)
-      }
-      sound.playAsync()
-    }
-
-    useEffect(() => {
-      if (isSavedRecording) {
-        loadSavedRecordings()
-        setIsSavedRecording(false)
-      }
-      if (isDeletedRecording) {
-        loadSavedRecordings()
-        setIsdeletedRecording(false)
-      }
-    }, [isSavedRecording, isDeletedRecording])
 
     useEffect(() => {
       if (isFocused) {
@@ -192,32 +102,6 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
         })
       }
     }, [isFocused])
-
-    useEffect(() => {
-      loadSavedRecordings()
-    }, [])
-
-    const getRecordingFromLocalStorage = () => {
-      return savedRecordings.map((savedRecording) => {
-        return (
-          <View key={savedRecording.key}>
-            <Text>Recording {savedRecording.key}</Text>
-            <Button
-              onPress={() => {
-                playRecording(savedRecording.val)
-              }}
-              title="Play"
-            />
-            <Button
-              onPress={() => {
-                remove(savedRecording.key).then(() => setIsdeletedRecording(true))
-              }}
-              title="delete"
-            />
-          </View>
-        )
-      })
-    }
 
     return (
       <View testID="RecordScreen" style={FULL}>
@@ -236,26 +120,26 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
             <Ionicons name="flask-outline" size={110} color="#d4d8de" />
           </View>
           <View style={BOX_CONTAINER}>
-            <View style={BOX}>
+            <TouchableOpacity style={BOX} onPress={() => navigation.navigate("sleepDelay")}>
               <Ionicons name="bed-outline" size={65} color="#c7cbd1" />
               <Text style={BOX_TEXT} text="수면 시작 시간"></Text>
               <Text style={BOX_SUB_TEXT} text="0분"></Text>
-            </View>
-            <View style={BOX}>
+            </TouchableOpacity>
+            <TouchableOpacity style={BOX}>
               <Feather name="play-circle" size={65} color="#c7cbd1" />
               <Text style={BOX_TEXT} text="결과"></Text>
               <Text style={BOX_SUB_TEXT} text="이번달 1회"></Text>
-            </View>
-            <View style={BOX}>
+            </TouchableOpacity>
+            <TouchableOpacity style={BOX}>
               <Ionicons name="ios-finger-print-outline" size={65} color="#c7cbd1" />
               <Text style={BOX_TEXT} text="요법"></Text>
               <Text style={BOX_SUB_TEXT} text="없음"></Text>
-            </View>
-            <View style={BOX}>
+            </TouchableOpacity>
+            <TouchableOpacity style={BOX}>
               <Ionicons name="wine-outline" size={65} color="#c7cbd1" />
               <Text style={BOX_TEXT} text="요인"></Text>
               <Text style={BOX_SUB_TEXT} text="없음"></Text>
-            </View>
+            </TouchableOpacity>
             <Button
               text="시작"
               style={BUTTON}
@@ -263,14 +147,6 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
               onPress={() => navigation.navigate("sleep")}
             />
           </View>
-          {/* <View style={{ backgroundColor: "#32cd32", flex: 1 }}>
-            <Button
-              title={recording ? "stop recording" : "start recording"}
-              color="#841584"
-              onPress={recording ? stopRecording : startRecording}
-            />
-            {getRecordingFromLocalStorage()}
-          </View> */}
         </Screen>
       </View>
     )
