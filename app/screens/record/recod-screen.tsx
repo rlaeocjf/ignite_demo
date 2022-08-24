@@ -87,6 +87,7 @@ const HEADER_IMG: ViewStyle = {
 export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = observer(
   ({ navigation }) => {
     const [alarmTime, setAlarmTime] = useState<string>()
+    const [delayTime, setDelayTime] = useState<string>()
     const isFocused = useIsFocused()
 
     useEffect(() => {
@@ -99,6 +100,10 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
           } else {
             setAlarmTime("")
           }
+        })
+        load("delaysleep").then((data) => {
+          console.log(data)
+          setDelayTime(data)
         })
       }
     }, [isFocused])
@@ -123,7 +128,7 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
             <TouchableOpacity style={BOX} onPress={() => navigation.navigate("sleepDelay")}>
               <Ionicons name="bed-outline" size={65} color="#c7cbd1" />
               <Text style={BOX_TEXT} text="수면 시작 시간"></Text>
-              <Text style={BOX_SUB_TEXT} text="0분"></Text>
+              <Text style={BOX_SUB_TEXT} text={`${delayTime ? delayTime : 0}분`}></Text>
             </TouchableOpacity>
             <TouchableOpacity style={BOX}>
               <Feather name="play-circle" size={65} color="#c7cbd1" />

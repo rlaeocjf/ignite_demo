@@ -1,24 +1,14 @@
-import React, { useEffect, FC, useState } from "react"
-import { TextStyle, View, ViewStyle, ImageBackground, Image } from "react-native"
+import React, { FC, useEffect, useState } from "react"
+import { TextStyle, ViewStyle, View } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import { Button, GradientBackground, Header, Screen, Text } from "../../components"
+import { GradientBackground, Header, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
-import { Audio } from "expo-av"
-import { load, save, saveString } from "../../utils/storage"
-import moment from "moment"
-import BackgroundTimer from "react-native-background-timer"
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons"
-import { GestureHandlerRootView, Swipeable, TouchableOpacity } from "react-native-gesture-handler"
-import { Recording, Sound } from "expo-av/build/Audio"
-import { color } from "../../theme"
-import DatePicker from "react-native-date-picker"
+import { load, saveString } from "../../utils/storage"
+import { Picker } from "@react-native-picker/picker"
 
 const FULL: ViewStyle = {
   flex: 1,
-}
-const CONTAINER: ViewStyle = {
-  backgroundColor: color.transparent,
 }
 const HEADER: ViewStyle = {
   backgroundColor: "#1a1b20",
@@ -30,17 +20,43 @@ const HEADER_TITLE: TextStyle = {
   letterSpacing: 1.5,
   textAlign: "center",
 }
+const PICKER = {
+  textAlign: "center",
+  flex: 1,
+  width: "100%",
+  color: "#d3dfeb",
+}
 
 export const SleepDelayScreen: FC<StackScreenProps<NavigatorParamList, "sleepDelay">> = observer(
   ({ navigation }) => {
-    const [date, setDate] = useState(new Date())
+    // const delay: { label: string; value: number | string }[] = [
+    //   { lable: "0분", value: "0" },
+    //   { lable: "5분", value: "5" },
+    //   { lable: "10분", value: "10" },
+    //   { lable: "15분", value: "15" },
+    //   { lable: "20분", value: "20" },
+    //   { lable: "30분", value: "30" },
+    //   { lable: "40분", value: "40" },
+    //   { lable: "60분", value: "60" },
+    //   { lable: "90분", value: "90" },
+    // ]
+    const [selectedDelay, setSelectedDelay] = useState<string>()
     const goBack = () => navigation.goBack()
     const saveAndGoBack = () => {
-      if (date) {
-        save("delaysleep", { time: date })
+      let delay = "0"
+      if (selectedDelay) {
+        delay = selectedDelay
       }
+      saveString("delaysleep", delay)
       goBack()
     }
+
+    useEffect(() => {
+      load("delaysleep").then((data) => {
+        setSelectedDelay(data.toString())
+      })
+    }, [])
+
     return (
       <View testID="SleepDelayScreen" style={FULL}>
         <GradientBackground colors={["#1a1b20", "#314752"]} />
@@ -53,14 +69,25 @@ export const SleepDelayScreen: FC<StackScreenProps<NavigatorParamList, "sleepDel
         />
         <View style={{ alignItems: "center" }}>
           <GradientBackground colors={["#191d23", "#1f252c"]} />
-          <DatePicker
-            date={date}
-            mode="time"
-            minuteInterval={1}
-            onDateChange={setDate}
-            textColor={"#d3dfeb"}
-            androidVariant={"nativeAndroid"}
-          />
+          <View>
+            <Text style={{ fontSize: 17 }} text="잠들 때까지 얼마나 걸리나요?" />
+          </View>
+          <Picker
+            dropdownIconColor={"white"}
+            style={PICKER}
+            selectedValue={selectedDelay}
+            onValueChange={(itemValue, itemIndex) => setSelectedDelay(itemValue)}
+          >
+            <Picker.Item label="0분" value="0" color={"#d3dfeb"} />
+            <Picker.Item label="5분" value="5" color={"#d3dfeb"} />
+            <Picker.Item label="10분" value="10" color={"#d3dfeb"} />
+            <Picker.Item label="15분" value="15" color={"#d3dfeb"} />
+            <Picker.Item label="20분" value="20" color={"#d3dfeb"} />
+            <Picker.Item label="30분" value="30" color={"#d3dfeb"} />
+            <Picker.Item label="40분" value="40" color={"#d3dfeb"} />
+            <Picker.Item label="60분" value="60" color={"#d3dfeb"} />
+            <Picker.Item label="90분" value="90" color={"#d3dfeb"} />
+          </Picker>
         </View>
       </View>
     )
