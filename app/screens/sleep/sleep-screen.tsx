@@ -127,8 +127,8 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
       // console.log("Stopping recording..")
       setRecording(undefined)
       await recording.stopAndUnloadAsync()
-      // const uri = recording.getURI()
-      // console.log("Recording stopped and stored at", uri)
+      const uri = recording.getURI()
+      console.log("Recording stopped and stored at", uri)
       const { status } = await recording.createNewLoadedSoundAsync()
       if (status.isLoaded) {
         // console.log(recording.getURI())
