@@ -59,6 +59,7 @@ export const SleepDelayScreen: FC<StackScreenProps<NavigatorParamList, "sleepDel
             minuteInterval={1}
             onDateChange={setDate}
             textColor={"#d3dfeb"}
+            androidVariant={"nativeAndroid"}
           />
         </View>
       </View>

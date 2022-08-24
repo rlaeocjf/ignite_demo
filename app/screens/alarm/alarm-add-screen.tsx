@@ -67,6 +67,7 @@ export const AlarmAddScreen: FC<StackScreenProps<NavigatorParamList, "alarm">> =
             minuteInterval={1}
             onDateChange={setDate}
             textColor={"#d3dfeb"}
+            androidVariant={"nativeAndroid"}
           />
           <TouchableOpacity style={TOUCH_REMOVE_ALARM} onPress={removeAlarm}>
             <Text text="알림 끄기" style={TOUCH_REMOVE_ALARM_TEXT}></Text>
