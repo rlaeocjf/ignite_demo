@@ -20,8 +20,9 @@ const FULL: ViewStyle = {
 const CONTAINER: ViewStyle = {
   backgroundColor: color.transparent,
 }
-const HEADER: TextStyle = {
+const HEADER: ViewStyle = {
   backgroundColor: "#1a1b20",
+  paddingTop: 60,
 }
 const HEADER_TITLE: TextStyle = {
   fontSize: 18,
@@ -34,9 +35,9 @@ export const SleepDelayScreen: FC<StackScreenProps<NavigatorParamList, "sleepDel
   ({ navigation }) => {
     const [date, setDate] = useState(new Date())
     const goBack = () => navigation.goBack()
-    const saveAlarm = () => {
+    const saveAndGoBack = () => {
       if (date) {
-        save("alarm", { time: date })
+        save("delaysleep", { time: date })
       }
       goBack()
     }
@@ -46,8 +47,7 @@ export const SleepDelayScreen: FC<StackScreenProps<NavigatorParamList, "sleepDel
         <Header
           headerText="수면 시작 시간"
           leftText="취소"
-          onLeftPress={goBack}
-          rightText="저장"
+          onLeftPress={saveAndGoBack}
           style={HEADER}
           titleStyle={HEADER_TITLE}
         />

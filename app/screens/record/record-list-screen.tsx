@@ -5,16 +5,16 @@ import { NavigatorParamList } from "../../navigators"
 import { Audio } from "expo-av"
 import { getAllItemFromAsync } from "../../storage"
 import { remove } from "../../utils/storage"
-import { View, ViewStyle,  Text, Button} from "react-native"
+import { View, ViewStyle, Text, Button } from "react-native"
 import { useIsFocused } from "@react-navigation/native"
+import * as FileSystem from "expo-file-system"
 
 const FULL: ViewStyle = {
   flex: 1,
 }
-
 export const RecordListScreen: FC<StackScreenProps<NavigatorParamList, "recordList">> = observer(
-    ({ navigation }) => {
-        
+  ({ navigation }) => {
+    console.log(FileSystem.cacheDirectory)
     const [savedRecordings, setSavedRecordings] = useState<{ key: string; val: string }[]>([])
     const isFocused = useIsFocused()
 
@@ -37,14 +37,18 @@ export const RecordListScreen: FC<StackScreenProps<NavigatorParamList, "recordLi
       })
       if (status.isLoaded) {
         console.log(status.durationMillis)
-        await sound.playAsync();
+        await sound.playAsync()
       }
     }
     useEffect(() => {
-        if (isFocused) {
-            loadSavedRecordings()
-        }
+      if (isFocused) {
+        loadSavedRecordings()
+      }
     }, [isFocused])
+
+    const deletePhysical = async (filename: string) => {
+      await FileSystem.deleteAsync(filename)
+    }
 
     const getRecordingFromLocalStorage = () => {
       return savedRecordings.map((savedRecording) => {
@@ -59,7 +63,8 @@ export const RecordListScreen: FC<StackScreenProps<NavigatorParamList, "recordLi
             />
             <Button
               onPress={() => {
-                remove(savedRecording.key).then(() =>console.log('delete!'))
+                deletePhysical(savedRecording.val)
+                remove(savedRecording.key).then(() => console.log("delete!"))
               }}
               title="delete"
             />
@@ -70,9 +75,7 @@ export const RecordListScreen: FC<StackScreenProps<NavigatorParamList, "recordLi
 
     return (
       <View testID="RecordScreen" style={FULL}>
-          <View>
-            {getRecordingFromLocalStorage()}
-          </View>
+        <View>{getRecordingFromLocalStorage()}</View>
       </View>
     )
   },
