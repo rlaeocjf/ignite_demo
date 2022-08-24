@@ -102,7 +102,6 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
           }
         })
         load("delaysleep").then((data) => {
-          console.log(data)
           setDelayTime(data)
         })
       }

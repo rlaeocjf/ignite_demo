@@ -124,6 +124,7 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
     }
 
     const stopRecording = async () => {
+      if (!recording) return
       // console.log("Stopping recording..")
       setRecording(undefined)
       await recording.stopAndUnloadAsync()
@@ -137,12 +138,25 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
     }
 
     useEffect(() => {
-      startRecording()
-      let timeout: number
+      // startRecording()
+
       const liveTime = setInterval(() => {
         setCurrTime(new Date())
       }, 1000)
 
+      let delayRecord = 0
+      load("delaysleep")
+        .then((data) => {
+          setDelay(data)
+          delayRecord = BackgroundTimer.setTimeout(() => {
+            startRecording()
+          }, data * 60 * 1000)
+        })
+        .catch((err) => {
+          console.log(err)
+          startRecording()
+        })
+      let timeout: number
       load("alarm").then((data) => {
         if (data && data.time) {
           setAlarm(data.time)
@@ -161,8 +175,11 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
         }
       })
       return () => {
+        // 수면 지연 시간 클리어
+        clearTime(delayRecord)
+        // 알람시간 클리어
         clearTime(timeout)
-        clearTime(timer)
+        // 현재 시간 view 클리어
         clearIntervaTime(liveTime)
       }
     }, [])
@@ -250,8 +267,8 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
               <Text style={TIME_TEXT} text={moment(currTime).format("HH:mm:ss")} />
             </View>
             <View style={START_SESSION_BOX}>
-              {delay && (
-                <Text style={START_SESSION_TEXT} text={`코골이 감지가 ${delay} 후 시작됩니다`} />
+              {parseInt(delay) > 0 && (
+                <Text style={START_SESSION_TEXT} text={`코골이 감지가 ${delay}분 후 시작됩니다`} />
               )}
             </View>
             <View style={ALARM_BOX}>
