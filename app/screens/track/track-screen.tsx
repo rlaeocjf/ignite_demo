@@ -1,14 +1,15 @@
-import React, { FC } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { View, ViewStyle, Platform } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import { GradientBackground, Screen, Text } from "../../components"
+import { Button, GradientBackground, Screen, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
-import TrackPlayer from "react-native-track-player"
-import { PlaybackService } from "./src/services"
 import BackgroundTimer from "react-native-background-timer"
 import Sound from "react-native-sound"
+import { Audio } from "expo-av"
+import { Recording } from "expo-av/build/Audio"
+import { saveString } from "../../utils/storage"
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -20,6 +21,8 @@ const CONTAINER: ViewStyle = {
 export const TrackScreen: FC<StackScreenProps<NavigatorParamList, "track">> = observer(
   ({ navigation }) => {
     const goBack = () => navigation.goBack()
+
+    const [recording, setRecording] = useState<Recording>()
 
     // const start = async () => {
     //   // Set up the player
@@ -42,8 +45,48 @@ export const TrackScreen: FC<StackScreenProps<NavigatorParamList, "track">> = ob
     //   await TrackPlayer.play()
     // }
 
+    const startRecording = async () => {
+      try {
+        // console.log("Requesting permissions..")
+        const permission = await Audio.requestPermissionsAsync()
+        // console.log(permission)
+        if (permission.status === "granted") {
+          await Audio.setAudioModeAsync({
+            allowsRecordingIOS: true,
+            playsInSilentModeIOS: true,
+            // 백그라운드 모드에서 녹음 할때..
+            staysActiveInBackground: true,
+          })
+          // console.log("Starting recording..")
+          const { recording } = await Audio.Recording.createAsync(
+            Audio.RECORDING_OPTIONS_PRESET_LOW_QUALITY,
+          )
+          setRecording(recording)
+          // console.log("Recording started")
+        } else {
+          // console.log("please grant permission to app to access microphone")
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    }
+
+    const stopRecording = async () => {
+      if (!recording) return
+      // console.log("Stopping recording..")
+      setRecording(undefined)
+      await recording.stopAndUnloadAsync()
+      const uri = recording.getURI()
+      console.log("Recording stopped and stored at", uri)
+      const { status } = await recording.createNewLoadedSoundAsync()
+      if (status.isLoaded) {
+        // console.log(recording.getURI())
+        saveString(`recording_${new Date().getTime()}`, recording.getURI())
+      }
+    }
+
     Sound.setCategory("Playback")
-    const whoosh = new Sound(
+    const playback = new Sound(
       require("../../../assets/ringtones/walk_in_the_forest.mp3"),
       Platform.OS === "android" && Sound.MAIN_BUNDLE,
       (error) => {
@@ -54,13 +97,13 @@ export const TrackScreen: FC<StackScreenProps<NavigatorParamList, "track">> = ob
         // loaded successfully
         console.log(
           "duration in seconds: " +
-            whoosh.getDuration() +
+            playback.getDuration() +
             "number of channels: " +
-            whoosh.getNumberOfChannels(),
+            playback.getNumberOfChannels(),
         )
 
         // Play the sound with an onEnd callback
-        whoosh.play((success) => {
+        playback.play((success) => {
           if (success) {
             console.log("successfully finished playing")
           } else {
@@ -70,52 +113,70 @@ export const TrackScreen: FC<StackScreenProps<NavigatorParamList, "track">> = ob
       },
     )
     // Reduce the volume by half
-    whoosh.setVolume(0.5)
+    playback.setVolume(0.5)
 
     // Position the sound to the full right in a stereo field
-    whoosh.setPan(1)
+    playback.setPan(1)
 
     // Loop indefinitely until stop() is called
-    whoosh.setNumberOfLoops(-1)
+    playback.setNumberOfLoops(-1)
 
     // Get properties of the player instance
-    // console.log("volume: " + whoosh.getVolume())
-    // console.log("pan: " + whoosh.getPan())
-    // console.log("loops: " + whoosh.getNumberOfLoops())
+    // console.log("volume: " + playback.getVolume())
+    // console.log("pan: " + playback.getPan())
+    // console.log("loops: " + playback.getNumberOfLoops())
 
     // // Seek to a specific point in seconds
-    // whoosh.setCurrentTime(2.5)
+    // playback.setCurrentTime(2.5)
 
     // // Get the current playback point in seconds
-    // whoosh.getCurrentTime((seconds) => console.log("at " + seconds))
+    // playback.getCurrentTime((seconds) => console.log("at " + seconds))
 
     // // Pause the sound
-    // whoosh.pause()
+    // playback.pause()
 
     // // Stop the sound and rewind to the beginning
-    // whoosh.stop(() => {
+    // playback.stop(() => {
     //   // Note: If you want to play a sound after stopping and rewinding it,
     //   // it is important to call play() in a callback.
-    //   whoosh.play()
+    //   playback.play()
     // })
 
     // const soundEnd = new Sound(
     //   require("../../../assets/ringtones/walk_in_the_forest.mp3"),
     //   Sound.MAIN_BUNDLE,
     // )
-
+    // startRecording()
     BackgroundTimer.setTimeout(() => {
-      // whoosh.release()
-      whoosh.play()
+      // playback.release()
+      console.log(playback.isLoaded())
+      playback.play()
     }, 3000)
+
+    // useEffect(() => {
+    //   console.log("loading....")
+    //   console.log(playback)
+    //   // startRecording()
+    //   if (playback.isLoaded()) {
+    //     console.log("player loaded!!")
+    //     playback.play()
+    //   }
+    // }, [playback.isLoaded])
 
     return (
       <View testID="SnoozeScreen" style={FULL}>
         <GradientBackground colors={["#81a1c9", "#426b9c"]} />
         <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
           <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <Text text="트랙22" />
+            <Text text="테스트" />
           </View>
+          <Button
+            text="stop"
+            onPress={() => {
+              console.log(playback.isPlaying())
+              playback.stop()
+            }}
+          />
         </Screen>
       </View>
     )
