@@ -6,6 +6,7 @@ import { AlarmScreen } from "../screens/alarm/alarm-screen"
 import { WelcomeScreen } from "../screens"
 import { RecordListScreen } from "../screens/record/record-list-screen"
 import { SnoozeScreen } from "../screens/snooze/snooze-screen"
+import { TrackScreen } from "../screens/track/track-screen"
 
 const Tab = createBottomTabNavigator()
 
@@ -39,6 +40,13 @@ function Tabs() {
       <Tab.Screen
         name="녹음목록"
         component={RecordListScreen}
+        options={{
+          tabBarIcon: ({ color }) => <Ionicons name={"list-outline"} color={color} size={30} />,
+        }}
+      />
+      <Tab.Screen
+        name="소리"
+        component={TrackScreen}
         options={{
           tabBarIcon: ({ color }) => <Ionicons name={"list-outline"} color={color} size={30} />,
         }}
