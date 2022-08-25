@@ -14,7 +14,6 @@ const FULL: ViewStyle = {
 }
 export const RecordListScreen: FC<StackScreenProps<NavigatorParamList, "recordList">> = observer(
   ({ navigation }) => {
-    console.log(FileSystem.cacheDirectory)
     const [savedRecordings, setSavedRecordings] = useState<{ key: string; val: string }[]>([])
     const isFocused = useIsFocused()
 

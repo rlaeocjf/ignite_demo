@@ -89,6 +89,7 @@ const BTN_SNOOZE_CONTAINER = {
 
 export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = observer(
   ({ navigation }) => {
+    console.log("sleep screen")
     const [timer, setTimer] = useState<number>()
     const [currTime, setCurrTime] = useState<Date>()
     const [alarm, setAlarm] = useState<string>()
@@ -141,7 +142,7 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
       // startRecording()
 
       const liveTime = setInterval(() => {
-        setCurrTime(new Date())
+        //setCurrTime(new Date())
       }, 1000)
 
       let delayRecord = 0
