@@ -32,6 +32,9 @@ export const RecordListScreen: FC<StackScreenProps<NavigatorParamList, "recordLi
       })
     }
     const playRecording = async (uri: string) => {
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: false,
+      })
       const { sound, status } = await Audio.Sound.createAsync({
         uri,
       })

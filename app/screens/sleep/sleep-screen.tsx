@@ -193,8 +193,9 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
     }
 
     const playSound = async () => {
-      // console.log("Loading Sound")
+      console.log("Loading Sound")
       await Audio.setAudioModeAsync({
+        allowsRecordingIOS: false,
         playsInSilentModeIOS: true,
         staysActiveInBackground: true,
       })
@@ -204,6 +205,7 @@ export const SleepScreen: FC<StackScreenProps<NavigatorParamList, "sleep">> = ob
       if (status.isLoaded) {
         setPlayback(sound)
         sound.setIsLoopingAsync(true)
+        sound.setVolumeAsync(1.0)
         await sound.playAsync()
       }
     }
