@@ -153,16 +153,6 @@ export const TrackScreen: FC<StackScreenProps<NavigatorParamList, "track">> = ob
       playback.play()
     }, 3000)
 
-    // useEffect(() => {
-    //   console.log("loading....")
-    //   console.log(playback)
-    //   // startRecording()
-    //   if (playback.isLoaded()) {
-    //     console.log("player loaded!!")
-    //     playback.play()
-    //   }
-    // }, [playback.isLoaded])
-
     return (
       <View testID="SnoozeScreen" style={FULL}>
         <GradientBackground colors={["#81a1c9", "#426b9c"]} />

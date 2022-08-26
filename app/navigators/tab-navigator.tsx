@@ -44,13 +44,13 @@ function Tabs() {
           tabBarIcon: ({ color }) => <Ionicons name={"list-outline"} color={color} size={30} />,
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="소리"
         component={TrackScreen}
         options={{
           tabBarIcon: ({ color }) => <Ionicons name={"list-outline"} color={color} size={30} />,
         }}
-      />
+      /> */}
       {/* <Tab.Screen
         name="알람"
         component={AlarmScreen}
