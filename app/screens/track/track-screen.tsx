@@ -10,6 +10,7 @@ import Sound from "react-native-sound"
 import { Audio } from "expo-av"
 import { Recording } from "expo-av/build/Audio"
 import { saveString } from "../../utils/storage"
+import { playback } from "../../components/playback/playback"
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -20,6 +21,7 @@ const CONTAINER: ViewStyle = {
 
 export const TrackScreen: FC<StackScreenProps<NavigatorParamList, "track">> = observer(
   ({ navigation }) => {
+    console.log("track")
     const goBack = () => navigation.goBack()
 
     const [recording, setRecording] = useState<Recording>()
@@ -72,6 +74,12 @@ export const TrackScreen: FC<StackScreenProps<NavigatorParamList, "track">> = ob
     }
 
     const stopRecording = async () => {
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: false,
+        playsInSilentModeIOS: true,
+        // 백그라운드 모드에서 녹음 할때..
+        staysActiveInBackground: true,
+      })
       if (!recording) return
       // console.log("Stopping recording..")
       setRecording(undefined)
@@ -84,42 +92,47 @@ export const TrackScreen: FC<StackScreenProps<NavigatorParamList, "track">> = ob
         saveString(`recording_${new Date().getTime()}`, recording.getURI())
       }
     }
+    const changeAudioMode = async () => {
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: false,
+      })
+    }
 
-    Sound.setCategory("Playback")
-    const playback = new Sound(
-      require("../../../assets/ringtones/walk_in_the_forest.mp3"),
-      Platform.OS === "android" && Sound.MAIN_BUNDLE,
-      (error) => {
-        if (error) {
-          console.log("failed to load the sound", error)
-          return
-        }
-        // loaded successfully
-        console.log(
-          "duration in seconds: " +
-            playback.getDuration() +
-            "number of channels: " +
-            playback.getNumberOfChannels(),
-        )
+    // Sound.setCategory("Playback")
+    // const playback = new Sound(
+    //   require("../../../assets/ringtones/walk_in_the_forest.mp3"),
+    //   Platform.OS === "android" && Sound.MAIN_BUNDLE,
+    //   (error) => {
+    //     if (error) {
+    //       console.log("failed to load the sound", error)
+    //       return
+    //     }
+    //     // loaded successfully
+    //     console.log(
+    //       "duration in seconds: " +
+    //         playback.getDuration() +
+    //         "number of channels: " +
+    //         playback.getNumberOfChannels(),
+    //     )
 
-        // Play the sound with an onEnd callback
-        playback.play((success) => {
-          if (success) {
-            console.log("successfully finished playing")
-          } else {
-            console.log("playback failed due to audio decoding errors")
-          }
-        })
-      },
-    )
-    // Reduce the volume by half
-    playback.setVolume(0.5)
+    //     // Play the sound with an onEnd callback
+    //     playback.play((success) => {
+    //       if (success) {
+    //         console.log("successfully finished playing")
+    //       } else {
+    //         console.log("playback failed due to audio decoding errors")
+    //       }
+    //     })
+    //   },
+    // )
+    // // Reduce the volume by half
+    // playback.setVolume(0.5)
 
-    // Position the sound to the full right in a stereo field
-    playback.setPan(1)
+    // // Position the sound to the full right in a stereo field
+    // playback.setPan(1)
 
-    // Loop indefinitely until stop() is called
-    playback.setNumberOfLoops(-1)
+    // // Loop indefinitely until stop() is called
+    // playback.setNumberOfLoops(-1)
 
     // Get properties of the player instance
     // console.log("volume: " + playback.getVolume())
@@ -146,25 +159,35 @@ export const TrackScreen: FC<StackScreenProps<NavigatorParamList, "track">> = ob
     //   require("../../../assets/ringtones/walk_in_the_forest.mp3"),
     //   Sound.MAIN_BUNDLE,
     // )
+    const player = playback
     // startRecording()
     BackgroundTimer.setTimeout(() => {
-      // playback.release()
-      console.log(playback.isLoaded())
-      playback.play()
-    }, 3000)
+      changeAudioMode()
+        .then(() => {
+          console.log("then")
+          if (player.isLoaded() && !player.isPlaying()) {
+            player.play()
+          }
+        })
+        .catch((err) => {
+          console.log("catch")
+          console.log(err)
+        })
+    }, 5000)
 
     return (
       <View testID="SnoozeScreen" style={FULL}>
         <GradientBackground colors={["#81a1c9", "#426b9c"]} />
         <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
           <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <Text text="테스트" />
+            <Text text="테스트33" />
           </View>
           <Button
             text="stop"
             onPress={() => {
-              console.log(playback.isPlaying())
-              playback.stop()
+              console.log(player.isPlaying())
+              stopRecording()
+              player.stop()
             }}
           />
         </Screen>
