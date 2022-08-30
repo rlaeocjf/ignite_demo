@@ -7,6 +7,7 @@ import { WelcomeScreen } from "../screens"
 import { RecordListScreen } from "../screens/record/record-list-screen"
 import { SnoozeScreen } from "../screens/snooze/snooze-screen"
 import { TrackScreen } from "../screens/track/track-screen"
+import { LoginScreen } from "../screens/auth/login-screen"
 
 const Tab = createBottomTabNavigator()
 

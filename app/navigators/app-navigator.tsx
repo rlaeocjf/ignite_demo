@@ -4,22 +4,19 @@
  * Generally speaking, it will contain an auth flow (registration, login, forgot password)
  * and a "main" flow which the user will use once logged in.
  */
-import React from "react"
+import React, { createContext, useMemo, useReducer } from "react"
 import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 // import { WelcomeScreen, DemoScreen, DemoListScreen } from "../screens"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
-import { RecordScreen } from "../screens/record/recod-screen"
 import Tabs from "./tab-navigator"
-import { DemoListScreen, DemoScreen, WelcomeScreen } from "../screens"
+import { WelcomeScreen } from "../screens"
 import { AlarmAddScreen } from "../screens/alarm/alarm-add-screen"
 import { SleepScreen } from "../screens/sleep/sleep-screen"
-import { Text } from "../components"
-import { SwipeScreen } from "../screens/swipe/swipe-screen"
 import { RecordListScreen } from "../screens/record/record-list-screen"
-import { SnoozeScreen } from "../screens/snooze/snooze-screen"
 import { SleepDelayScreen } from "../screens/sleep/sleep-delay-screen"
+import { LoginScreen } from "../screens/auth/login-screen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -36,6 +33,7 @@ import { SleepDelayScreen } from "../screens/sleep/sleep-delay-screen"
 export type NavigatorParamList = {
   welcome: undefined
   demo: undefined
+  // 🔥 Your screens go here
   demoList: undefined
   record: undefined
   tabs: undefined
@@ -46,13 +44,35 @@ export type NavigatorParamList = {
   recordList: undefined
   snooze: undefined
   sleepDelay: undefined
-  // 🔥 Your screens go here
+  login: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<NavigatorParamList>()
 
-const CANCLE = { color: "#28ace5", fontSize: 17, fontWeight: 500 }
+const SplashStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="welcome" component={WelcomeScreen} />
+    </Stack.Navigator>
+  )
+}
+
+const LoginStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="login" component={LoginScreen} />
+    </Stack.Navigator>
+  )
+}
 
 const AppStack = () => {
   return (
@@ -60,31 +80,19 @@ const AppStack = () => {
       screenOptions={{
         headerShown: false,
       }}
-      // initialRouteName="welcome"
       initialRouteName="tabs"
     >
-      {/* <Stack.Screen name="welcome" component={WelcomeScreen} /> */}
-      <Stack.Screen name="demo" component={DemoScreen} />
-      <Stack.Screen name="demoList" component={DemoListScreen} />
-      {/** 🔥 Your screens go here */}
-      {/* <Stack.Screen name="alarm" component={AlarmAddScreen} /> */}
+      {/* <Stack.Screen name="welcome" component={WelcomeScreen} />
+      <Stack.Screen key="demo" name="demo" component={DemoScreen} />
+      <Stack.Screen key="demoList" name="demoList" component={DemoListScreen} /> */}
+      {/* add stacks.. */}
       <Stack.Screen name="tabs" component={Tabs} />
       <Stack.Group
         screenOptions={{
           presentation: "modal",
-          // headerShown: true,
-          // headerStyle: { backgroundColor: "#1a1b20" },
         }}
       >
-        <Stack.Screen
-          name="alarmAdd"
-          component={AlarmAddScreen}
-          // options={{
-          //   headerTitle: "알람 추가",
-          //   headerTitleStyle: { color: "#fff" },
-          //   headerLeft: () => <Text text={"취소"} style={CANCLE}></Text>,
-          // }}
-        />
+        <Stack.Screen name="alarmAdd" component={AlarmAddScreen} />
       </Stack.Group>
       <Stack.Screen name="sleep" component={SleepScreen} />
       <Stack.Screen name="sleepDelay" component={SleepDelayScreen} />
@@ -95,18 +103,109 @@ const AppStack = () => {
 
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
+interface IState {
+  isLoading: boolean
+  isSignout: boolean
+  refreshToken: string | null
+  name: string | null
+  email: string | null
+}
+interface IPayload {
+  refreshToken: string
+  name?: string
+  email?: string
+}
+interface IAction {
+  type: string
+  payload?: {
+    refreshToken: string
+    name?: string
+    email?: string
+  }
+}
+
+// state의 초기 값을 설정한다
+const initialState: IState = {
+  isLoading: false,
+  isSignout: false,
+  refreshToken: null,
+  name: null,
+  email: null,
+}
+
+// reducer는 action에서 받은 type에 따라서 state를 변경한다.
+const reducer = (prevState: IState, action: IAction) => {
+  switch (action.type) {
+    case "RESTORE_TOKEN":
+      return {
+        ...prevState,
+        refreshToken: action.payload.refreshToken,
+        isLoading: false,
+      }
+    case "SIGN_IN":
+      return {
+        ...prevState,
+        isSignout: false,
+        refreshToken: action.payload.refreshToken,
+        name: action.payload.name || null,
+        email: action.payload.email || null,
+      }
+    case "SIGN_OUT":
+      return {
+        ...prevState,
+        isSignout: true,
+        refreshToken: null,
+      }
+    default:
+      throw new Error()
+  }
+}
+interface IContext {
+  signIn: (data: any) => void | null
+  signOut: (data: any) => void | null
+  signUp: (data: any) => void | null
+}
+export const AuthContext = createContext<IContext>({
+  signIn: null,
+  signOut: null,
+  signUp: null,
+})
+
 export const AppNavigator = (props: NavigationProps) => {
-  console.log(DarkTheme)
+  const [state, dispatch] = useReducer(reducer, initialState)
+  const authContext = useMemo(
+    () => ({
+      signIn: async (data: IPayload) => {
+        dispatch({ type: "SIGN_IN", payload: data })
+      },
+      signOut: () => dispatch({ type: "SIGN_OUT" }),
+      signUp: async (data: IPayload) => {
+        dispatch({ type: "SIGN_IN", payload: data })
+      },
+    }),
+    [],
+  )
+
   const colorScheme = useColorScheme()
   useBackButtonHandler(canExit)
+  console.log("app-navi state = ")
+  console.log(state)
   return (
-    <NavigationContainer
-      ref={navigationRef}
-      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-      {...props}
-    >
-      <AppStack />
-    </NavigationContainer>
+    <AuthContext.Provider value={authContext}>
+      <NavigationContainer
+        ref={navigationRef}
+        theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        {...props}
+      >
+        {state.isLoading ? (
+          <SplashStack />
+        ) : state.refreshToken == null ? (
+          <LoginStack />
+        ) : (
+          <AppStack />
+        )}
+      </NavigationContainer>
+    </AuthContext.Provider>
   )
 }
 
