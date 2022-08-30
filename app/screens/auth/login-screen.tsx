@@ -55,16 +55,20 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
         .signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
           const user = userCredential.user
-          console.log(user)
-          signIn(userCredential)
-          Alert.alert("로그인 성공", `${user.email}님 환영합니다.`)
+          user
+            .getIdToken(false)
+            .then((data) => {
+              console.log(data)
+              signIn({ refreshToken: data })
+            })
+            .catch((err) => console.log(err))
         })
         .catch((error) => {
           const alertMessage = errorMessages[error.code]
             ? errorMessages[error.code]
             : "알 수 없는 이유로 로그인에 실패했습니다."
           console.log(error.code)
-          Alert.alert("계정생성 실패", alertMessage)
+          Alert.alert("로그인 실패", alertMessage)
         })
     }
 

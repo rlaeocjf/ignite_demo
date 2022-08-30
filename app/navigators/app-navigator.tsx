@@ -176,6 +176,7 @@ export const AppNavigator = (props: NavigationProps) => {
   const authContext = useMemo(
     () => ({
       signIn: async (data: IPayload) => {
+        console.log(data)
         dispatch({ type: "SIGN_IN", payload: data })
       },
       signOut: () => dispatch({ type: "SIGN_OUT" }),
