@@ -6,6 +6,7 @@ import { Button, Screen } from "../../components"
 import { color } from "../../theme"
 import { AuthContext, NavigatorParamList } from "../../navigators"
 import auth from "@react-native-firebase/auth"
+import styled from "styled-components/native"
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -75,7 +76,7 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
     return (
       <View testID="LoginScreen" style={FULL}>
         <Screen style={CONTAINER} preset="fixed">
-          <View>
+          <InputWrap>
             <TextInput placeholder="Email" value={email} onChangeText={(text) => setEmail(text)} />
             <TextInput
               placeholder="Password"
@@ -83,7 +84,7 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
               onChangeText={(text) => setPassword(text)}
               secureTextEntry
             />
-          </View>
+          </InputWrap>
           <View>
             <Button text="Login" onPress={handleSignIn} />
           </View>
@@ -92,3 +93,9 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
     )
   },
 )
+
+const InputWrap = styled.View`
+  background-color: red;
+  height: 200px;
+  flex: 1;
+`
