@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "631618224421",
+    "project_id": "algorithmlabs-ae100",
+    "storage_bucket": "algorithmlabs-ae100.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:631618224421:android:fbbf72130b0c9a24b05acc",
+        "android_client_info": {
+          "package_name": "com.pizzaapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "631618224421-co2bphkssfns2gi5ktuika7omdj8paoc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXyOvjEWHX33mWY1cd3zbxVA22De7a7xU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "631618224421-co2bphkssfns2gi5ktuika7omdj8paoc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
