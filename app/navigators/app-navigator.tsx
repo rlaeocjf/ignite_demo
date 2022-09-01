@@ -45,6 +45,9 @@ export type NavigatorParamList = {
   snooze: undefined
   sleepDelay: undefined
   login: undefined
+  chartkit: undefined
+  chartVictory: undefined
+  chartSvg: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/

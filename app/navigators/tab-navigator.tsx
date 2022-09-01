@@ -2,12 +2,10 @@ import React from "react"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { RecordScreen } from "../screens/record/recod-screen"
 import { Ionicons } from "@expo/vector-icons"
-import { AlarmScreen } from "../screens/alarm/alarm-screen"
-import { WelcomeScreen } from "../screens"
 import { RecordListScreen } from "../screens/record/record-list-screen"
-import { SnoozeScreen } from "../screens/snooze/snooze-screen"
-import { TrackScreen } from "../screens/track/track-screen"
-import { LoginScreen } from "../screens/auth/login-screen"
+import { ChartChartKitScreen, ChartScreen } from "../screens/chart/chart-chartkit-screen"
+import { ChartVictoryScreen } from "../screens/chart/chart-vitory-screen"
+import { ChartSvgScreen } from "../screens/chart/chart-svgchart-screen"
 
 const Tab = createBottomTabNavigator()
 
@@ -43,6 +41,33 @@ function Tabs() {
         component={RecordListScreen}
         options={{
           tabBarIcon: ({ color }) => <Ionicons name={"list-outline"} color={color} size={30} />,
+        }}
+      />
+      <Tab.Screen
+        name="chart-kit"
+        component={ChartChartKitScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Ionicons name={"bar-chart-outline"} color={color} size={30} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="chart-victory"
+        component={ChartVictoryScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Ionicons name={"bar-chart-outline"} color={color} size={30} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="chart-svg"
+        component={ChartSvgScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Ionicons name={"bar-chart-outline"} color={color} size={30} />
+          ),
         }}
       />
       {/* <Tab.Screen
