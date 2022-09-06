@@ -2,20 +2,17 @@ import React from "react"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { RecordScreen } from "../screens/record/recod-screen"
 import { Ionicons } from "@expo/vector-icons"
-import { AlarmScreen } from "../screens/alarm/alarm-screen"
-import { WelcomeScreen } from "../screens"
 import { RecordListScreen } from "../screens/record/record-list-screen"
-import { SnoozeScreen } from "../screens/snooze/snooze-screen"
-import { TrackScreen } from "../screens/track/track-screen"
-import { LoginScreen } from "../screens/auth/login-screen"
+import { WebScreen } from "../screens/web/web-screen"
 
 const Tab = createBottomTabNavigator()
 
 function Tabs() {
   return (
     <Tab.Navigator
+      initialRouteName="record"
       screenOptions={{
-        tabBarStyle: { backgroundColor: "#3a3e46" },
+        tabBarStyle: { backgroundColor: "#1a1b20" },
         tabBarActiveTintColor: "#2bbae8",
         tabBarLabelStyle: {
           fontSize: 11,
@@ -27,22 +24,35 @@ function Tabs() {
         name="home"
         component={WelcomeScreen}
         options={{
+          title: "home",
           tabBarIcon: ({ color }) => <Ionicons name={"ios-home"} color={color} size={30} />,
         }}
       /> */}
       <Tab.Screen
-        name="녹음"
+        name="record"
         component={RecordScreen}
         options={{
+          title: "녹음",
           headerShown: false,
           tabBarIcon: ({ color }) => <Ionicons name={"mic"} color={color} size={30} />,
+          tabBarStyle: { backgroundColor: "#3a3e46" },
         }}
       />
       <Tab.Screen
-        name="녹음목록"
+        name="recordList"
         component={RecordListScreen}
         options={{
+          title: "녹음목록",
           tabBarIcon: ({ color }) => <Ionicons name={"list-outline"} color={color} size={30} />,
+        }}
+      />
+      <Tab.Screen
+        name="webview"
+        component={WebScreen}
+        options={{
+          title: "웹뷰",
+          tabBarIcon: ({ color }) => <Ionicons name={"list-outline"} color={color} size={30} />,
+          headerShown: false,
         }}
       />
       {/* <Tab.Screen

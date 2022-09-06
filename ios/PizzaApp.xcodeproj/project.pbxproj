@@ -517,7 +517,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.TestSnoreLab;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.TestSnoreLab2;
 				PRODUCT_NAME = PizzaApp;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -544,7 +544,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.TestSnoreLab;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.TestSnoreLab2;
 				PRODUCT_NAME = PizzaApp;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

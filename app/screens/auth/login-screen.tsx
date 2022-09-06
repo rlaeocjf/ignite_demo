@@ -33,7 +33,6 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
           console.log("created!")
           console.log(userCredential)
           const user = userCredential.user
-
           console.log(user)
         })
         .catch((error) => {
@@ -147,7 +146,6 @@ const WelcomeWrap = styled.View`
   justify-content: center;
   align-items: center;
 `
-
 const WelcomeText = styled(Text)<{
   marginTop?: number
   color?: string
