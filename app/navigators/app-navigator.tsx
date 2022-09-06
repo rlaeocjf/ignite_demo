@@ -17,6 +17,7 @@ import { SleepScreen } from "../screens/sleep/sleep-screen"
 import { RecordListScreen } from "../screens/record/record-list-screen"
 import { SleepDelayScreen } from "../screens/sleep/sleep-delay-screen"
 import { LoginScreen } from "../screens/auth/login-screen"
+import { RecordScreen } from "../screens/record/recod-screen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -45,6 +46,7 @@ export type NavigatorParamList = {
   snooze: undefined
   sleepDelay: undefined
   login: undefined
+  web: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -87,6 +89,7 @@ const AppStack = () => {
       <Stack.Screen key="demoList" name="demoList" component={DemoListScreen} /> */}
       {/* add stacks.. */}
       <Stack.Screen name="tabs" component={Tabs} />
+      {/* <Stack.Screen name="record" component={RecordScreen} /> */}
       <Stack.Group
         screenOptions={{
           presentation: "modal",
