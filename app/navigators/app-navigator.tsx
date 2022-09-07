@@ -192,8 +192,6 @@ export const AppNavigator = (props: NavigationProps) => {
 
   const colorScheme = useColorScheme()
   useBackButtonHandler(canExit)
-  console.log("app-navi state = ")
-  console.log(state)
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer

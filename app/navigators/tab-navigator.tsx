@@ -50,8 +50,10 @@ function Tabs() {
         name="webview"
         component={WebScreen}
         options={{
-          title: "웹뷰",
-          tabBarIcon: ({ color }) => <Ionicons name={"list-outline"} color={color} size={30} />,
+          title: "결과",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name={"play-circle-outline"} color={color} size={30} />
+          ),
           headerShown: false,
         }}
       />
