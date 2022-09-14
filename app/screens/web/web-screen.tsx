@@ -2,11 +2,10 @@ import React, { FC, useRef } from "react"
 import { View, ViewStyle, Dimensions } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import { GradientBackground, Screen } from "../../components"
+import { Screen } from "../../components"
 import { NavigatorParamList } from "../../navigators"
 import { WebView } from "react-native-webview"
 import { WEBVIEW_URL } from "../../utils/constants"
-import { color } from "../../theme"
 
 const FULL: ViewStyle = { flex: 1 }
 const CONTAINER: ViewStyle = {
@@ -20,10 +19,21 @@ interface IIint {
   deviceHeight: number
   bottomTabHeight?: number
 }
-
+interface INativeEvent {
+  canGoback: boolean
+  canGoForward: boolean
+  data: string
+  loading: boolean
+  url: string
+}
+interface INativeEventData {
+  type: string
+  data: any
+}
 export const WebScreen: FC<StackScreenProps<NavigatorParamList, "web">> = observer(
   ({ navigation }) => {
     const ref = useRef<WebView>(null)
+    // send data to webview
     const init = () => {
       if (ref.current && ref.current.postMessage) {
         try {
@@ -37,9 +47,18 @@ export const WebScreen: FC<StackScreenProps<NavigatorParamList, "web">> = observ
         }
       }
     }
-    const handleOnMessage = ({ nativeEvent: { data } }) => {
-      console.log(data)
-      navigation.navigate("record")
+    // data from webview
+    // const handleOnMessage = ({ nativeEvent: { data } }) => {
+    const handleOnMessage = (e: { nativeEvent: INativeEvent }) => {
+      try {
+        const data: INativeEventData = JSON.parse(e.nativeEvent.data)
+        console.log(data)
+        if (data.type === "MENU_CHANGE") {
+          navigation.navigate(data.data)
+        }
+      } catch (err: unknown) {
+        console.log(err)
+      }
     }
     const handleError = ({ nativeEvent }) => console.warn("WebView error: ", nativeEvent)
     return (
