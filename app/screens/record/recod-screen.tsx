@@ -17,11 +17,11 @@ const CONTAINER: ViewStyle = {
   backgroundColor: color.transparent,
 }
 const HEADER: TextStyle = {
-  justifyContent: "flex-end",
-  alignItems: "flex-end",
+  alignSelf: "flex-end",
   flexDirection: "row",
   marginVertical: 10,
   paddingHorizontal: 15,
+  width: 100,
 }
 const BOX_CONTAINER: ViewStyle = {
   flexDirection: "row",
@@ -129,12 +129,20 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
               <Text style={BOX_TEXT} text="수면 시작 시간"></Text>
               <Text style={BOX_SUB_TEXT} text={`${delayTime ? delayTime : 0}분`}></Text>
             </TouchableOpacity>
-            <TouchableOpacity style={BOX}>
+            <TouchableOpacity
+              style={BOX}
+              onPress={() => navigation.navigate("tabs", { screen: "webviewResults" })}
+            >
               <Feather name="play-circle" size={65} color="#c7cbd1" />
               <Text style={BOX_TEXT} text="결과"></Text>
               <Text style={BOX_SUB_TEXT} text="이번달 1회"></Text>
             </TouchableOpacity>
-            <TouchableOpacity style={BOX}>
+            <TouchableOpacity
+              style={BOX}
+              onPress={() => {
+                navigation.navigate("therapy")
+              }}
+            >
               <Ionicons name="ios-finger-print-outline" size={65} color="#c7cbd1" />
               <Text style={BOX_TEXT} text="요법"></Text>
               <Text style={BOX_SUB_TEXT} text="없음"></Text>

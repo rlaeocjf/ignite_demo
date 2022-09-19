@@ -3,7 +3,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { RecordScreen } from "../screens/record/recod-screen"
 import { Ionicons } from "@expo/vector-icons"
 import { RecordListScreen } from "../screens/record/record-list-screen"
-import { WebScreen } from "../screens/web/web-screen"
+import { WebResultScreen } from "../screens/web/web-result-screen"
+import { WebTrendScreen } from "../screens/web/web-trend-screen"
 
 const Tab = createBottomTabNavigator()
 
@@ -47,13 +48,22 @@ function Tabs() {
         }}
       />
       <Tab.Screen
-        name="webview"
-        component={WebScreen}
+        name="webviewResults"
+        component={WebResultScreen}
         options={{
           title: "결과",
           tabBarIcon: ({ color }) => (
             <Ionicons name={"play-circle-outline"} color={color} size={30} />
           ),
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="webviewTrend"
+        component={WebTrendScreen}
+        options={{
+          title: "동향",
+          tabBarIcon: ({ color }) => <Ionicons name={"stats-chart"} color={color} size={30} />,
           headerShown: false,
         }}
       />
