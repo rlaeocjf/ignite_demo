@@ -13,7 +13,6 @@ const CONTAINER: ViewStyle = {
   alignItems: "stretch", // 이부분 중요 이거 안써주면 WebView 에 width 값을 지정해야함..
   justifyContent: "center",
 }
-
 interface IIint {
   deviceWidth: number
   deviceHeight: number
@@ -30,7 +29,7 @@ interface INativeEventData {
   type: string
   data: any
 }
-export const WebScreen: FC<StackScreenProps<NavigatorParamList, "web">> = observer(
+export const WebResultScreen: FC<StackScreenProps<NavigatorParamList, "webResult">> = observer(
   ({ navigation }) => {
     const ref = useRef<WebView>(null)
     // send data to webview

@@ -18,6 +18,8 @@ import { RecordListScreen } from "../screens/record/record-list-screen"
 import { SleepDelayScreen } from "../screens/sleep/sleep-delay-screen"
 import { LoginScreen } from "../screens/auth/login-screen"
 import { RecordScreen } from "../screens/record/recod-screen"
+import { WebResultScreen } from "../screens/web/web-result-screen"
+import { TherapyScreen } from "../screens/therapy/therapy-screen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -46,7 +48,9 @@ export type NavigatorParamList = {
   snooze: undefined
   sleepDelay: undefined
   login: undefined
-  web: undefined
+  webResult: undefined
+  webTrend: undefined
+  therapy: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -97,9 +101,22 @@ const AppStack = () => {
       >
         <Stack.Screen name="alarmAdd" component={AlarmAddScreen} />
       </Stack.Group>
+      {/* 요법 선택 화면 */}
+      <Stack.Group
+        screenOptions={{
+          presentation: "fullScreenModal",
+        }}
+      >
+        <Stack.Screen name="therapy" component={TherapyScreen} />
+      </Stack.Group>
+      {/* 수면 화면 */}
       <Stack.Screen name="sleep" component={SleepScreen} />
+      {/* 수면 지연시간 설정  */}
       <Stack.Screen name="sleepDelay" component={SleepDelayScreen} />
+      {/* 녹음목록 */}
       <Stack.Screen name="recordList" component={RecordListScreen} />
+      {/* 통계 웹뷰 */}
+      <Stack.Screen name="webResult" component={WebResultScreen} />
     </Stack.Navigator>
   )
 }
