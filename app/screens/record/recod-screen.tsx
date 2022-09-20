@@ -88,6 +88,7 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
   ({ navigation }) => {
     const [alarmTime, setAlarmTime] = useState<string>()
     const [delayTime, setDelayTime] = useState<string>()
+    const [therapys, setTherapys] = useState<string[]>()
     const isFocused = useIsFocused()
 
     useEffect(() => {
@@ -104,8 +105,18 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
         load("delaysleep").then((data) => {
           setDelayTime(data)
         })
+        load("therapyList").then((data: string[]) => {
+          setTherapys(data)
+        })
       }
     }, [isFocused])
+
+    const getCount = () => {
+      if (therapys && therapys.length) {
+        return `${therapys.length}개 선택`
+      }
+      return "없음"
+    }
 
     return (
       <View testID="RecordScreen" style={FULL}>
@@ -145,7 +156,7 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
             >
               <Ionicons name="ios-finger-print-outline" size={65} color="#c7cbd1" />
               <Text style={BOX_TEXT} text="요법"></Text>
-              <Text style={BOX_SUB_TEXT} text="없음"></Text>
+              <Text style={BOX_SUB_TEXT} text={getCount()}></Text>
             </TouchableOpacity>
             <TouchableOpacity style={BOX}>
               <Ionicons name="wine-outline" size={65} color="#c7cbd1" />
