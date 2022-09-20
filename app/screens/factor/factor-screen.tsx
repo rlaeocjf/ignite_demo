@@ -7,7 +7,7 @@ import { Button, Header, Screen, Text } from "../../components"
 import { color } from "../../theme"
 import IconCheck from "../../components/icon-check/icon-check"
 import { load, save } from "../../utils/storage"
-import DATA from "../../static/therapy/data.json"
+import DATA from "../../static/factor/data.json"
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -38,7 +38,6 @@ const HEADER_TITLE: TextStyle = {
   textAlign: "center",
 }
 const ICON_SCROLLVIEW: ViewStyle = {
-  // backgroundColor: "blue",
   backgroundColor: "#1a1b20",
   paddingHorizontal: 15,
 }
@@ -69,14 +68,14 @@ export interface ICheck {
   id: string
   check: boolean
 }
-export const TherapyScreen: FC<StackScreenProps<NavigatorParamList, "therapy">> = observer(
+export const FactorScreen: FC<StackScreenProps<NavigatorParamList, "factor">> = observer(
   ({ navigation }) => {
     const goBack = () => navigation.goBack()
     /**
-     * 요인을 localstorage에 저장하고 뒤로 돌아간다.
+     * 요법을 localstorage에 저장하고 뒤로 돌아간다.
      */
     const handleSave = () => {
-      save("therapyList", checkList)
+      save("factorList", checkList)
         .then(() => console.log("saved"))
         .catch((err) => console.log(err))
       goBack()
@@ -84,7 +83,7 @@ export const TherapyScreen: FC<StackScreenProps<NavigatorParamList, "therapy">> 
     const [checkList, setCheckList] = useState<string[]>([])
     const [checkCount, setCheckCount] = useState(0)
     /**
-     * 각 각의 요인 아이콘을 press했을때 check여부를 관리한다.
+     * 각 각의 요법 아이콘을 press했을때 check여부를 관리한다.
      * @param param0
      */
     const handlePress = ({ id, check }: ICheck) => {
@@ -95,7 +94,7 @@ export const TherapyScreen: FC<StackScreenProps<NavigatorParamList, "therapy">> 
       }
     }
     /**
-     * 해당 요인 아이콘이 이전에 체크되었는지 여부를 확인한다.
+     * 해당 요법 아이콘이 이전에 체크되었는지 여부를 확인한다.
      * @param id
      * @returns
      */
@@ -104,7 +103,7 @@ export const TherapyScreen: FC<StackScreenProps<NavigatorParamList, "therapy">> 
     }
 
     /**
-     * 체크된 요인의 리스트가 변경되면
+     * 체크된 요법의 리스트가 변경되면
      * count state를 변경 한다.
      */
     useEffect(() => {
@@ -113,10 +112,10 @@ export const TherapyScreen: FC<StackScreenProps<NavigatorParamList, "therapy">> 
 
     /**
      * 스크린(컴포넌트)가 마운트 되는 시점에
-     * 로컬스토리지의 체크된 요인데이터를 가져와 세팅한다
+     * 로컬스토리지의 체크된 요법데이터를 가져와 세팅한다
      */
     useEffect(() => {
-      load("therapyList").then((data: string[]) => {
+      load("factorList").then((data: string[]) => {
         if (data) {
           setCheckList(data)
         }
@@ -127,7 +126,7 @@ export const TherapyScreen: FC<StackScreenProps<NavigatorParamList, "therapy">> 
       <View testID="SwipeScreen" style={FULL}>
         <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
           <Header
-            headerText="코골이 요법"
+            headerText="요법"
             leftText="취소"
             onLeftPress={goBack}
             style={HEADER}
@@ -136,7 +135,7 @@ export const TherapyScreen: FC<StackScreenProps<NavigatorParamList, "therapy">> 
           <View style={NOTICE}>
             <Text
               style={NOTICE_TITLE}
-              text="이 세션의 코골이 요법을 선택하세요. 아이콘을 길게 누르면 추가 정보가 표시됩니다."
+              text="이 세션의 요법을 선택하세요. 아이콘을 길게 누르면 추가 정보가 표시됩니다."
             />
           </View>
           <ScrollView style={ICON_SCROLLVIEW}>
@@ -144,7 +143,7 @@ export const TherapyScreen: FC<StackScreenProps<NavigatorParamList, "therapy">> 
               {DATA.data.map((item, index) => {
                 return (
                   <IconCheck
-                    key={`therapy_icon_${index}`}
+                    key={`factor_icon_${index}`}
                     id={item.id}
                     icon={item.icon}
                     iconTitle={item.iconTitle}

@@ -1,0 +1,56 @@
+{
+  "data": [
+    { "id": "1", "icon": "wine-glass-alt", "iconTitle": ["주류"] },
+    { "id": "2", "icon": "running", "iconTitle": ["운동을 실시함"] },
+    {
+      "id": "3",
+      "icon": "bed",
+      "iconTitle": ["수면 장소 바뀜"]
+    },
+    {
+      "id": "4",
+      "icon": "battery-empty",
+      "iconTitle": ["탈진"]
+    },
+    {
+      "id": "5",
+      "icon": "temperature-high",
+      "iconTitle": ["아픔"]
+    },
+    {
+      "id": "6",
+      "icon": "smoking",
+      "iconTitle": ["흡연"]
+    },
+    {
+      "id": "7",
+      "icon": "coffee",
+      "iconTitle": ["카페인"]
+    },
+    {
+      "id": "8",
+      "icon": "capsules",
+      "iconTitle": ["안정제"]
+    },
+    {
+      "id": "9",
+      "icon": "hand-holding-water",
+      "iconTitle": ["탈수"]
+    },
+    {
+      "id": "10",
+      "icon": "battery-empty",
+      "iconTitle": ["탈진"]
+    },
+    {
+      "id": "11",
+      "icon": "temperature-high",
+      "iconTitle": ["아픔"]
+    },
+    {
+      "id": "12",
+      "icon": "smoking",
+      "iconTitle": ["흡연"]
+    }
+  ]
+}

@@ -37,8 +37,8 @@ const ICON_TITLE: TextStyle = {
 }
 const ICON_CHECK: ViewStyle = {
   position: "absolute",
-  bottom: 50,
-  left: 65,
+  top: 90,
+  right: 10,
 }
 export default function IconCheck(props: IconCheckProps) {
   const { id, icon, iconColor, iconTitle, onpress, checked } = props
