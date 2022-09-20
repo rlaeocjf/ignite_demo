@@ -89,6 +89,7 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
     const [alarmTime, setAlarmTime] = useState<string>()
     const [delayTime, setDelayTime] = useState<string>()
     const [therapys, setTherapys] = useState<string[]>()
+    const [factors, setFactors] = useState<string[]>()
     const isFocused = useIsFocused()
 
     useEffect(() => {
@@ -108,12 +109,22 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
         load("therapyList").then((data: string[]) => {
           setTherapys(data)
         })
+        load("factorList").then((data: string[]) => {
+          setFactors(data)
+        })
       }
     }, [isFocused])
 
-    const getCount = () => {
-      if (therapys && therapys.length) {
-        return `${therapys.length}개 선택`
+    const getCount = (kind: "therapy" | "factor") => {
+      if (kind === "therapy") {
+        if (therapys && therapys.length) {
+          return `${therapys.length}개 선택`
+        }
+      }
+      if (kind === "factor") {
+        if (factors && factors.length) {
+          return `${factors.length}개 선택`
+        }
       }
       return "없음"
     }
@@ -156,12 +167,17 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
             >
               <Ionicons name="ios-finger-print-outline" size={65} color="#c7cbd1" />
               <Text style={BOX_TEXT} text="요법"></Text>
-              <Text style={BOX_SUB_TEXT} text={getCount()}></Text>
+              <Text style={BOX_SUB_TEXT} text={getCount("therapy")}></Text>
             </TouchableOpacity>
-            <TouchableOpacity style={BOX}>
+            <TouchableOpacity
+              style={BOX}
+              onPress={() => {
+                navigation.navigate("factor")
+              }}
+            >
               <Ionicons name="wine-outline" size={65} color="#c7cbd1" />
               <Text style={BOX_TEXT} text="요인"></Text>
-              <Text style={BOX_SUB_TEXT} text="없음"></Text>
+              <Text style={BOX_SUB_TEXT} text={getCount("factor")}></Text>
             </TouchableOpacity>
             <Button
               text="시작"

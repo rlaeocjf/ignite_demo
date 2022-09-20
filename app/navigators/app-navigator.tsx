@@ -20,6 +20,7 @@ import { LoginScreen } from "../screens/auth/login-screen"
 import { RecordScreen } from "../screens/record/recod-screen"
 import { WebResultScreen } from "../screens/web/web-result-screen"
 import { TherapyScreen } from "../screens/therapy/therapy-screen"
+import { FactorScreen } from "../screens/factor/factor-screen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -51,6 +52,7 @@ export type NavigatorParamList = {
   webResult: undefined
   webTrend: undefined
   therapy: undefined
+  factor: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -101,13 +103,15 @@ const AppStack = () => {
       >
         <Stack.Screen name="alarmAdd" component={AlarmAddScreen} />
       </Stack.Group>
-      {/* 요법 선택 화면 */}
       <Stack.Group
         screenOptions={{
           presentation: "fullScreenModal",
         }}
       >
+        {/* 요법 선택 화면 */}
         <Stack.Screen name="therapy" component={TherapyScreen} />
+        {/* 요인 선택 화면 */}
+        <Stack.Screen name="factor" component={FactorScreen} />
       </Stack.Group>
       {/* 수면 화면 */}
       <Stack.Screen name="sleep" component={SleepScreen} />
