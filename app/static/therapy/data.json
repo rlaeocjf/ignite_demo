@@ -1,0 +1,56 @@
+{
+  "data": [
+    { "id": "1", "icon": "head-side-mask", "iconTitle": ["지속성", "양성 기압법"] },
+    { "id": "2", "icon": "spray-can", "iconTitle": ["혀 리테이너"] },
+    {
+      "id": "3",
+      "icon": "prescription-bottle-alt",
+      "iconTitle": ["마우스 테이프"]
+    },
+    {
+      "id": "4",
+      "icon": "head-side-mask",
+      "iconTitle": ["지속성", "양성 기압법"]
+    },
+    {
+      "id": "5",
+      "icon": "spray-can",
+      "iconTitle": ["혀 리테이너"]
+    },
+    {
+      "id": "6",
+      "icon": "head-side-mask",
+      "iconTitle": ["마우스 테이프"]
+    },
+    {
+      "id": "7",
+      "icon": "prescription-bottle-alt",
+      "iconTitle": ["지속성", "양성 기압법"]
+    },
+    {
+      "id": "8",
+      "icon": "spray-can",
+      "iconTitle": ["혀 리테이너"]
+    },
+    {
+      "id": "9",
+      "icon": "head-side-mask",
+      "iconTitle": ["마우스 테이프"]
+    },
+    {
+      "id": "10",
+      "icon": "spray-can",
+      "iconTitle": ["지속성", "양성 기압법"]
+    },
+    {
+      "id": "11",
+      "icon": "head-side-mask",
+      "iconTitle": ["혀 리테이너"]
+    },
+    {
+      "id": "12",
+      "icon": "prescription-bottle-alt",
+      "iconTitle": ["마우스 테이프"]
+    }
+  ]
+}

@@ -5,7 +5,9 @@ import { observer } from "mobx-react-lite"
 import { NavigatorParamList } from "../../navigators"
 import { Button, Header, Screen, Text } from "../../components"
 import { color } from "../../theme"
-import { IconCheck } from "../../components/icon-check/icon-check"
+import IconCheck from "../../components/icon-check/icon-check"
+import { load, save } from "../../utils/storage"
+import DATA from "../../static/therapy/data.json"
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -35,18 +37,15 @@ const HEADER_TITLE: TextStyle = {
   letterSpacing: 1.5,
   textAlign: "center",
 }
-const ICON_CONTAINER: ViewStyle = {
+const ICON_SCROLLVIEW: ViewStyle = {
   // backgroundColor: "blue",
   backgroundColor: "#1a1b20",
   paddingHorizontal: 15,
 }
-const ICON_ROW: ViewStyle = {
-  // backgroundColor: "#1a1b20",
-  // backgroundColor: "blue",
+const ICON_CONTAINER: ViewStyle = {
   display: "flex",
   flexDirection: "row",
   flexWrap: "wrap",
-  // flex: 1,
   justifyContent: "space-between",
 }
 const BUTTON_CONTAINER: ViewStyle = {
@@ -73,11 +72,21 @@ export interface ICheck {
 export const TherapyScreen: FC<StackScreenProps<NavigatorParamList, "therapy">> = observer(
   ({ navigation }) => {
     const goBack = () => navigation.goBack()
-    const save = () => {
-      console.log("save")
+    /**
+     * 요인을 localstorage에 저장하고 뒤로 돌아간다.
+     */
+    const handleSave = () => {
+      save("therapyList", checkList)
+        .then(() => console.log("saved"))
+        .catch((err) => console.log(err))
+      goBack()
     }
     const [checkList, setCheckList] = useState<string[]>([])
     const [checkCount, setCheckCount] = useState(0)
+    /**
+     * 각 각의 요인 아이콘을 press했을때 check여부를 관리한다.
+     * @param param0
+     */
     const handlePress = ({ id, check }: ICheck) => {
       if (check) {
         setCheckList([...checkList, id])
@@ -85,10 +94,33 @@ export const TherapyScreen: FC<StackScreenProps<NavigatorParamList, "therapy">> 
         setCheckList(checkList.filter((check) => check !== id))
       }
     }
+    /**
+     * 해당 요인 아이콘이 이전에 체크되었는지 여부를 확인한다.
+     * @param id
+     * @returns
+     */
+    const isChecked = (id: string) => {
+      return checkList.indexOf(id) > -1 ? Boolean(true) : Boolean(false)
+    }
+
+    /**
+     * 체크된 요인의 리스트가 변경되면
+     * count state를 변경 한다.
+     */
     useEffect(() => {
-      console.log(checkList)
       setCheckCount(checkList.length)
     }, [checkList])
+
+    /**
+     * 스크린(컴포넌트)가 마운트 되는 시점에
+     * 로컬스토리지의 체크된 요인데이터를 가져와 세팅한다
+     */
+    useEffect(() => {
+      load("therapyList").then((data: string[]) => {
+        setCheckList(data)
+      })
+    }, [])
+
     return (
       <View testID="SwipeScreen" style={FULL}>
         <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
@@ -96,8 +128,6 @@ export const TherapyScreen: FC<StackScreenProps<NavigatorParamList, "therapy">> 
             headerText="수면 시작 시간"
             leftText="취소"
             onLeftPress={goBack}
-            rightText="편집"
-            onRightPress={save}
             style={HEADER}
             titleStyle={HEADER_TITLE}
           />
@@ -107,86 +137,20 @@ export const TherapyScreen: FC<StackScreenProps<NavigatorParamList, "therapy">> 
               text="이 세션의 코골이 요법을 선택하세요. 아이콘을 길게 누르면 추가 정보가 표시됩니다."
             />
           </View>
-          <ScrollView style={ICON_CONTAINER}>
-            <View style={ICON_ROW}>
-              <IconCheck
-                id="1"
-                icon="head-side-mask"
-                iconTitle={["지속성", "양성 기압법"]}
-                onpress={handlePress}
-              />
-              <IconCheck
-                id="2"
-                icon="spray-can"
-                iconTitle={["혀 리테이너"]}
-                onpress={handlePress}
-              />
-              <IconCheck
-                id="3"
-                icon="prescription-bottle-alt"
-                iconTitle={["마우스 테이프"]}
-                onpress={handlePress}
-              />
-            </View>
-            <View style={ICON_ROW}>
-              <IconCheck
-                id="4"
-                icon="head-side-mask"
-                iconTitle={["지속성", "양성 기압법"]}
-                onpress={handlePress}
-              />
-              <IconCheck
-                id="5"
-                icon="spray-can"
-                iconTitle={["혀 리테이너"]}
-                onpress={handlePress}
-              />
-              <IconCheck
-                id="6"
-                icon="head-side-mask"
-                iconTitle={["마우스 테이프"]}
-                onpress={handlePress}
-              />
-            </View>
-            <View style={ICON_ROW}>
-              <IconCheck
-                id="7"
-                icon="prescription-bottle-alt"
-                iconTitle={["지속성", "양성 기압법"]}
-                onpress={handlePress}
-              />
-              <IconCheck
-                id="8"
-                icon="spray-can"
-                iconTitle={["혀 리테이너"]}
-                onpress={handlePress}
-              />
-              <IconCheck
-                id="9"
-                icon="head-side-mask"
-                iconTitle={["마우스 테이프"]}
-                onpress={handlePress}
-              />
-            </View>
-            <View style={ICON_ROW}>
-              <IconCheck
-                id="10"
-                icon="spray-can"
-                iconTitle={["지속성", "양성 기압법"]}
-                onpress={handlePress}
-              />
-              <IconCheck
-                id="11"
-                icon="head-side-mask"
-                iconTitle={["혀 리테이너"]}
-                onpress={handlePress}
-              />
-              <IconCheck
-                id="12"
-                icon="prescription-bottle-alt"
-                iconTitle={["마우스 테이프"]}
-                onpress={handlePress}
-              />
+          <ScrollView style={ICON_SCROLLVIEW}>
+            <View style={ICON_CONTAINER}>
+              {DATA.data.map((item, index) => {
+                return (
+                  <IconCheck
+                    key={`therapy_icon_${index}`}
+                    id={item.id}
+                    icon={item.icon}
+                    iconTitle={item.iconTitle}
+                    onpress={handlePress}
+                    checked={isChecked(item.id)}
+                  />
+                )
+              })}
             </View>
           </ScrollView>
           <View style={BUTTON_CONTAINER}>
@@ -198,11 +162,10 @@ export const TherapyScreen: FC<StackScreenProps<NavigatorParamList, "therapy">> 
               // onPress={() => {}}
             />
             <Button
-              // text={`${checkList.filter((check) => check.check).length || 0} 확인`}
               text={`${checkCount} 확인`}
               style={[BUTTON, { backgroundColor: color.buttonOk }]}
               textStyle={BUTTON_TEXT}
-              // onPress={() => {}}
+              onPress={handleSave}
             />
           </View>
         </Screen>
