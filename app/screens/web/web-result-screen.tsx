@@ -6,6 +6,7 @@ import { Screen } from "../../components"
 import { NavigatorParamList } from "../../navigators"
 import { WebView } from "react-native-webview"
 import { WEBVIEW_URL } from "../../utils/constants"
+import * as Haptics from "expo-haptics"
 
 const FULL: ViewStyle = { flex: 1 }
 const CONTAINER: ViewStyle = {
@@ -54,6 +55,32 @@ export const WebResultScreen: FC<StackScreenProps<NavigatorParamList, "webResult
         console.log(data)
         if (data.type === "MENU_CHANGE") {
           navigation.navigate(data.data)
+        }
+        if (data.type === "HAPTICS") {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+          // switch (data.data) {
+          //   case "select":
+          //     Haptics.selectionAsync()
+          //     break
+          //   case "success":
+          //     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+          //     break
+          //   case "error":
+          //     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
+          //     break
+          //   case "warning":
+          //     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning)
+          //     break
+          //   case "light":
+          //     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+          //     break
+          //   case "medium":
+          //     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+          //     break
+          //   case "heavy":
+          //     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+          //     break
+          // }
         }
       } catch (err: unknown) {
         console.log(err)

@@ -9,6 +9,7 @@ import { load } from "../../utils/storage"
 import { MaterialCommunityIcons, Ionicons, Feather } from "@expo/vector-icons"
 import moment from "moment"
 import { useIsFocused } from "@react-navigation/native"
+import * as Haptics from "expo-haptics"
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -146,14 +147,23 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
             <Ionicons name="flask-outline" size={110} color="#d4d8de" />
           </View>
           <View style={BOX_CONTAINER}>
-            <TouchableOpacity style={BOX} onPress={() => navigation.navigate("sleepDelay")}>
+            <TouchableOpacity
+              style={BOX}
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                navigation.navigate("sleepDelay")
+              }}
+            >
               <Ionicons name="bed-outline" size={65} color="#c7cbd1" />
               <Text style={BOX_TEXT} text="수면 시작 시간"></Text>
               <Text style={BOX_SUB_TEXT} text={`${delayTime ? delayTime : 0}분`}></Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={BOX}
-              onPress={() => navigation.navigate("tabs", { screen: "webviewResults" })}
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                navigation.navigate("tabs", { screen: "webviewResults" })
+              }}
             >
               <Feather name="play-circle" size={65} color="#c7cbd1" />
               <Text style={BOX_TEXT} text="결과"></Text>
@@ -162,6 +172,7 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
             <TouchableOpacity
               style={BOX}
               onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
                 navigation.navigate("therapy")
               }}
             >
@@ -172,6 +183,7 @@ export const RecordScreen: FC<StackScreenProps<NavigatorParamList, "record">> = 
             <TouchableOpacity
               style={BOX}
               onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
                 navigation.navigate("factor")
               }}
             >
