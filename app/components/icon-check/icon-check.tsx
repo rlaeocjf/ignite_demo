@@ -3,6 +3,7 @@ import { View, ViewStyle, TextStyle, TouchableOpacity } from "react-native"
 import { FontAwesome5, AntDesign } from "@expo/vector-icons"
 import { Text } from "../text/text"
 import { ICheck } from "../../screens/therapy/therapy-screen"
+import * as Haptics from "expo-haptics"
 
 interface IconCheckProps {
   id: string
@@ -51,6 +52,7 @@ export default function IconCheck(props: IconCheckProps) {
   }, [checked])
 
   const handlePress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
     const current = !check
     setCheck(current)
     onpress && onpress({ id, check: current })

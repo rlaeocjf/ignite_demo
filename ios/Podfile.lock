@@ -17,6 +17,8 @@ PODS:
     - ExpoModulesCore
   - Expo (45.0.8):
     - ExpoModulesCore
+  - ExpoHaptics (11.3.0):
+    - ExpoModulesCore
   - ExpoKeepAwake (10.1.1):
     - ExpoModulesCore
   - ExpoLinearGradient (11.4.0):
@@ -434,6 +436,7 @@ DEPENDENCIES:
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
   - Expo (from `../node_modules/expo/ios`)
+  - ExpoHaptics (from `../node_modules/expo-haptics/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - ExpoLocalization (from `../node_modules/expo-localization/ios`)
@@ -516,6 +519,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-font/ios"
   Expo:
     :path: "../node_modules/expo/ios"
+  ExpoHaptics:
+    :path: "../node_modules/expo-haptics/ios"
   ExpoKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
   ExpoLinearGradient:
@@ -619,6 +624,7 @@ SPEC CHECKSUMS:
   EXFileSystem: 2aa2d9289f84bca9532b9ccbd81504fa31eb1ded
   EXFont: 04235cc22e6fef86028feb67db452978dc6f240f
   Expo: 1133eaf0e12dc265ac82a256f3815401b7570f96
+  ExpoHaptics: efe9e68e9dfe0d15c183c0c70a25f3874124ab9e
   ExpoKeepAwake: c0c494b442ecd8122974c13b93ccfb57bd408e88
   ExpoLinearGradient: 1a3af07c6dab3c612967a294836df9ae717431df
   ExpoLocalization: 8f619bb6eec64575cd5220bfabbd7b4e2d6f33f8
@@ -677,6 +683,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   Yoga: 99652481fcd320aefa4a7ef90095b95acd181952
 
-PODFILE CHECKSUM: 551cc36d4ae59ab134273b013f45ab4560002fff
+PODFILE CHECKSUM: d2f90148fd98099958bba7eac9284c9c0846a3a3
 
 COCOAPODS: 1.11.3
